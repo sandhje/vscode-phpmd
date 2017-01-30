@@ -1,0 +1,31 @@
+{
+  "name": "vscode-phpmd-server",
+  "description": "VScode PHP Mess Detector language server",
+  "version": "0.0.1",
+  "author": "Sandhjé Bouw",
+  "license": "MIT",
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^2.6.2",
+    "vscode-uri": "^1.0.0",
+    "xml2js": "^0.4.17"
+  },
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.37",
+    "@types/node": "^6.0.52",
+    "@types/xml2js": "^0.0.32",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "mocha-typescript": "^1.0.15",
+    "ts-node": "^2.0.0",
+    "typescript": "^2.1.4"
+  },
+  "scripts": {
+    "test": "mocha --opts mocha.opts",
+    "compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
+    "watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc --watch -p ."
+  }
+}
