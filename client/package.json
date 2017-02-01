@@ -14,8 +14,12 @@
   "activationEvents": [
     "onLanguage:php"
   ],
-  "main": "./out/src/extension",
+  "main": "./out/client",
   "contributes": {
+    "commands": [{
+        "command": "phpmd.run",
+        "title": "Run PHPMD"
+    }],
     "configuration": {
       "type": "object",
       "title": "PHP Mess Detector configuration",
