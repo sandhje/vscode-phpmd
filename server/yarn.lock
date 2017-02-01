@@ -555,20 +555,20 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
 
-vscode-jsonrpc@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-2.4.0.tgz#51396030e13179555c939b791c29598058b8fbb4"
+vscode-jsonrpc@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-3.0.3.tgz#a7c3665bad4a3462c7ee3e5add88f3f016b4f3e4"
 
-vscode-languageserver-types@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-1.0.4.tgz#439a52f040c89cf6599d88ed9a1b5a9abdca11b7"
+vscode-languageserver-types@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.0.3.tgz#303b2a307c20952ff5c1f5a608f3c91146028d47"
 
-vscode-languageserver@^2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/vscode-languageserver/-/vscode-languageserver-2.6.2.tgz#c06d817a55c7c9e97bd0535424fc0d5754d61ea9"
+vscode-languageserver@^3.0.0:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver/-/vscode-languageserver-3.0.4.tgz#7470e29dfba0225290c6da58026eeee100d0ef02"
   dependencies:
-    vscode-jsonrpc "^2.4.0"
-    vscode-languageserver-types "^1.0.4"
+    vscode-jsonrpc "^3.0.3"
+    vscode-languageserver-types "^3.0.3"
 
 vscode-uri@^1.0.0:
   version "1.0.0"
