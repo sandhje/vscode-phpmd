@@ -5,10 +5,11 @@ import { workspace, ExtensionContext } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
 
 export function activate(context: ExtensionContext) {
+
 	let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
 
 	// Server debug options
-	let debugOptions = { execArgv: ["--nolazy", "--debug=6004"] };
+	let debugOptions = { execArgv: ["--debug=5701"] };
 
     // Server options
 	let serverOptions: ServerOptions = {
