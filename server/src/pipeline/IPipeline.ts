@@ -2,7 +2,7 @@ import IStage from "./IStage";
 
 interface IPipeline<T>
 {
-    pipe: (filter: IStage<T>) => IPipeline<T>;
+    pipe: (stage: IStage<T>) => IPipeline<T>;
 
     run: (input: T) => Promise<T>;
 }

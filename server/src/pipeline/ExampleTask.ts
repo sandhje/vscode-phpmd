@@ -7,14 +7,14 @@ class ExampleTask<T> extends AbstractTask<T>
         super();
     }
 
-    public in(input: T, resolve: (output?: T | PromiseLike<T>) => void, reject: (reason: any) => void): void
+    public up(input: T, resolve: (output?: T | PromiseLike<T>) => void, reject: (reason: any) => void): void
     {
         setTimeout(() => {
             resolve(input + this.logIn);
         }, 0);
     }
 
-    public out(output: T, resolve: (output?: T | PromiseLike<T>) => void, reject: (reason: any) => void): void
+    public down(output: T, resolve: (output?: T | PromiseLike<T>) => void, reject: (reason: any) => void): void
     {
         setTimeout(() => {
             resolve(output + this.logOut);

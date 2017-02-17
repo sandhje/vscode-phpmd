@@ -12,6 +12,7 @@ import * as Xml2Js from 'xml2js';
 import Pipeline from '../pipeline/Pipeline';
 import ExampleStage from '../pipeline/ExampleStage';
 import ExampleTask from '../pipeline/ExampleTask';
+import ExampleFilter from '../pipeline/ExampleFilter';
 
 class PhpmdServerController
 {
@@ -37,6 +38,27 @@ class PhpmdServerController
         asyncPipeline.run("test").then((data) => {
             // Do something with the result of the pipeline
             let a = data;
+        });
+
+
+        let asyncFilterPipeline = new Pipeline<string>()
+            .pipe(new ExampleTask<string>("a1", "b1"))
+            .pipe(
+                new ExampleFilter<string>("filtera1")
+                    .pipe(new ExampleTask<string>("fa1", "fb1"))
+                    .pipe(new ExampleTask<string>("fa2", "fb2"))
+            )
+            .pipe(new ExampleTask<string>("a2", "b2"));
+            
+        asyncFilterPipeline.run("test").then((data) => {
+            // Do something with the result of the pipeline
+            let a = data;
+
+            // Run again with different input
+            asyncFilterPipeline.run("filter").then((data) => {
+                // Do something with the result of the pipeline
+                let b = data;
+            });
         });
 
         // EOF async pipeline

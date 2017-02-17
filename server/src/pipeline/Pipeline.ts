@@ -3,13 +3,13 @@ import IStage from "./IStage";
 
 class Pipeline<T> implements IPipeline<T>
 {
-    private current: number = -1;
+    protected current: number = -1;
 
-    private filters: Array<IStage<T>> = [];
+    protected stages: Array<IStage<T>> = [];
 
-    public pipe(filter: IStage<T>): IPipeline<T>
+    public pipe(stage: IStage<T>): IPipeline<T>
     {
-        this.filters.push(filter);
+        this.stages.push(stage);
 
         return this;
     }
@@ -21,27 +21,32 @@ class Pipeline<T> implements IPipeline<T>
         return this.next(input);
     }
 
-    private reset(): void
+    protected reset(): void
     {
         this.current = -1;
     }
 
-    private next = (input: T): Promise<T> => {
+    protected next = (input: T): Promise<T> => {
         let promiseCallback = (resolve: (value?: T | PromiseLike<T>) => void, reject: (reason: any) => void) => {
             this.current++;
 
-            if (this.current in this.filters) {
+            if (this.current in this.stages) {
                 // Go to next in filter chain
                 // TODO: Try Wrapping this.invoke or next in an arrow function, see: http://stackoverflow.com/questions/36627845/es6-promises-how-to-chain-functions-with-delays
-                this.filters[this.current].invoke(input, this.next.bind(this), resolve, reject);
+                this.stages[this.current].invoke(input, this.next.bind(this), resolve, reject);
                 return; // Do not continue to default resolve if a filter was invoked
             }
 
-            // End of filter chain, walk back up
-            resolve(input);
+            // End of Pipeline
+            this.end(input, resolve, reject);
         };
 
         return new Promise<T>(promiseCallback.bind(this));
+    }
+
+    protected end(input: T, resolve: (value?: T | PromiseLike<T>) => void, reject: (reason: any) => void): void
+    {
+        resolve(input);
     }
 }
 
