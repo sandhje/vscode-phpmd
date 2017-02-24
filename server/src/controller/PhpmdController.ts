@@ -13,6 +13,7 @@ import Pipeline from '../pipeline/Pipeline';
 import ExampleStage from '../pipeline/ExampleStage';
 import ExampleTask from '../pipeline/ExampleTask';
 import ExampleFilter from '../pipeline/ExampleFilter';
+import ExampleParallel from '../pipeline/ExampleParallel';
 
 class PhpmdServerController
 {
@@ -31,34 +32,47 @@ class PhpmdServerController
         // Task is a specialized type of stage "doing" something
         // Parallel is a specialized type of stage running a several stages at once and waiting for all of them to complete
 
-        let asyncPipeline = new Pipeline<string>();
-        asyncPipeline.pipe(new ExampleTask<string>("a1", "b1"));
-        asyncPipeline.pipe(new ExampleTask<string>("a2", "b2"));
-        asyncPipeline.pipe(new ExampleTask<string>("a3", "b3"));
-        asyncPipeline.run("test").then((data) => {
-            // Do something with the result of the pipeline
-            let a = data;
-        });
+        // let asyncPipeline = new Pipeline<string>();
+        // asyncPipeline.pipe(new ExampleTask<string>("a1", "b1"));
+        // asyncPipeline.pipe(new ExampleTask<string>("a2", "b2"));
+        // asyncPipeline.pipe(new ExampleTask<string>("a3", "b3"));
+        // asyncPipeline.run("test").then((data) => {
+        //     // Do something with the result of the pipeline
+        //     let a = data;
+        // });
 
 
-        let asyncFilterPipeline = new Pipeline<string>()
+        // let asyncFilterPipeline = new Pipeline<string>()
+        //     .pipe(new ExampleTask<string>("a1", "b1"))
+        //     .pipe(
+        //         new ExampleFilter<string>("filtera1")
+        //             .pipe(new ExampleTask<string>("fa1", "fb1"))
+        //             .pipe(new ExampleTask<string>("fa2", "fb2"))
+        //     )
+        //     .pipe(new ExampleTask<string>("a2", "b2"));
+            
+        // asyncFilterPipeline.run("test").then((data) => {
+        //     // Do something with the result of the pipeline
+        //     let a = data;
+
+        //     // Run again with different input
+        //     asyncFilterPipeline.run("filter").then((data) => {
+        //         // Do something with the result of the pipeline
+        //         let b = data;
+        //     });
+        // });
+
+        let parallelPipeline = new Pipeline<string>()
             .pipe(new ExampleTask<string>("a1", "b1"))
             .pipe(
-                new ExampleFilter<string>("filtera1")
-                    .pipe(new ExampleTask<string>("fa1", "fb1"))
-                    .pipe(new ExampleTask<string>("fa2", "fb2"))
+                new ExampleParallel()
+                    .pipe(new ExampleTask<string>("-x1", "-y1"))
+                    .pipe(new ExampleTask<string>("-x2", "-y2"))
             )
             .pipe(new ExampleTask<string>("a2", "b2"));
-            
-        asyncFilterPipeline.run("test").then((data) => {
-            // Do something with the result of the pipeline
-            let a = data;
 
-            // Run again with different input
-            asyncFilterPipeline.run("filter").then((data) => {
-                // Do something with the result of the pipeline
-                let b = data;
-            });
+        parallelPipeline.run("parallel").then((data) => {
+            let b = data;
         });
 
         // EOF async pipeline
