@@ -1,32 +1,18 @@
+import PipelinePayloadModel from '../../model/PipelinePayloadModel';
+import { IExecuteStrategy } from '@open-sourcerers/j-stillery';
 import { Diagnostic, DiagnosticSeverity } from 'vscode-languageserver';
-import * as Process from 'child_process';
 
-class PhpmdService
+class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
 {
-    constructor(
-        private executable: string, 
-        private rules: string
-    ) { }
+    public execute(
+        input: PipelinePayloadModel, 
+        resolve: (output?: PipelinePayloadModel | PromiseLike<PipelinePayloadModel>) => void, 
+        reject: (reason: any) => void
+    ) {
+        input.diagnostics = this.getDiagnosticts(input.uri, input.parsed.pmd.file[0].violation);
 
-    ExecuteProcess(path: string, ): Promise<string>
-    {
-        return new Promise<string>((resolve, reject) => {
-            let result: string;
-            let process: Process.ChildProcess = Process.exec(this.executable + " " + path + " xml " + this.rules);
-
-            process.stdout.setEncoding('utf8');
-            process.stdout.on("data", (data) => {
-                if (result) {
-                    data = result + data.toString();
-                }
-
-                result = data.toString();
-            });
-            process.stdout.on("close", (code) => {
-                resolve(result);
-            });
-        });
-    }
+        resolve(input);
+    } void;
 
     getDiagnosticts(uri: string, problems: Array<any>): Array<Diagnostic> {
         let diagnostics: Diagnostic[] = [];
@@ -52,4 +38,4 @@ class PhpmdService
     }
 }
 
-export default PhpmdService;
+export default BuildDiagnosticsStrategy;

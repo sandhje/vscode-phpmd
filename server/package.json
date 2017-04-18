@@ -8,6 +8,7 @@
     "node": "*"
   },
   "dependencies": {
+    "@open-sourcerers/j-stillery": "^0.2.0",
     "vscode-languageserver": "^3.0.0",
     "vscode-uri": "^1.0.0",
     "xml2js": "^0.4.17"

@@ -6,9 +6,8 @@ import {
     TextDocumentIdentifier 
 } from 'vscode-languageserver';
 
-import PhpmdSettingsModel from './models/PhpmdSettingsModel';
+import PhpmdSettingsModel from './model/PhpmdSettingsModel';
 import PhpmdController from './controller/PhpmdController';
-import PhpmdServiceFactory from './factory/PhpmdServiceFactory';
 import PhpmdControllerFactory from './factory/PhpmdControllerFactory';
 
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
@@ -38,10 +37,7 @@ let defaults: PhpmdSettingsModel = {
 connection.onDidChangeConfiguration((change) => {
 	let settings: PhpmdSettingsModel = Object.assign<PhpmdSettingsModel, any>(defaults, change.settings.phpmd);
 
-	let serviceFactory = new PhpmdServiceFactory(settings);
-	let controllerFactory = new PhpmdControllerFactory(connection, serviceFactory.create());
-
-	controller = controllerFactory.create();
+	controller = new PhpmdControllerFactory(connection, settings).create();
 	
 	// Revalidate any open text documents
 	documents.all().forEach((document: TextDocument) => {
