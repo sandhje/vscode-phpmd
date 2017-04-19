@@ -9,7 +9,7 @@ export function activate(context: ExtensionContext) {
 	let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
 
 	// Server debug options
-	let debugOptions = { execArgv: ["--debug=5701"] };
+	let debugOptions = { execArgv: ["--nolazy", "--debug=6009"] };
 
     // Server options
 	let serverOptions: ServerOptions = {
