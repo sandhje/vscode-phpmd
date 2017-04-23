@@ -1,6 +1,7 @@
 import PipelinePayloadModel from '../../model/PipelinePayloadModel';
 import { IExecuteStrategy } from '@open-sourcerers/j-stillery';
 import { Parser } from 'xml2js';
+import { Pmd } from '../../model/pmd';
 
 class ParseStrategy implements IExecuteStrategy<PipelinePayloadModel>
 {
@@ -14,7 +15,7 @@ class ParseStrategy implements IExecuteStrategy<PipelinePayloadModel>
         reject: (reason: any) => void
     ) {
         this.parser.parseString(input.raw, (error, result) => {
-            input.parsed = result;
+            input.pmd = <Pmd> result.pmd || null;
 
             resolve(input);
         });    

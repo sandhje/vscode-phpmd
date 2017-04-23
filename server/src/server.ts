@@ -5,7 +5,6 @@ import {
     IConnection, TextDocuments, TextDocument, InitializeResult, 
     TextDocumentIdentifier 
 } from 'vscode-languageserver';
-
 import PhpmdSettingsModel from './model/PhpmdSettingsModel';
 import PhpmdController from './controller/PhpmdController';
 import PhpmdControllerFactory from './factory/PhpmdControllerFactory';
