@@ -1,12 +1,11 @@
 language: node_js
 node_js:
 - '6'
-install:
-- yarn install
 env:
 - TEST_DIR=server
 script:
 - cd $TEST_DIR
+- yarn install
 - npm test
 - npm run report-coverage
 after_success:
