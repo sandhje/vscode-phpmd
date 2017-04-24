@@ -9,4 +9,4 @@ class PhpmdControllerTest {
     public assertSendDiagnostics() {
         expect(true).to.be.false;
     }
-}
+};

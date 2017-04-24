@@ -1,6 +1,5 @@
-interface IFactory<T>
-{
-    create: () => T
+interface IFactory<T> {
+    create: () => T;
 }
 
 export default IFactory;

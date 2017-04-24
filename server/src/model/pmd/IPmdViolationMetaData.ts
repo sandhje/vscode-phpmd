@@ -1,4 +1,4 @@
-export interface PmdViolationMetaData {
+export interface IPmdViolationMetaData {
     beginline: string;
     class: string;
     endline: string;

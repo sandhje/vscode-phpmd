@@ -1,23 +1,20 @@
 import {
-	IPCMessageReader, IPCMessageWriter,
-	createConnection, IConnection, TextDocumentSyncKind,
-	TextDocuments, TextDocument, Diagnostic, DiagnosticSeverity,
-	InitializeParams, InitializeResult, TextDocumentPositionParams,
-	CompletionItem, CompletionItemKind, TextDocumentIdentifier
-} from 'vscode-languageserver';
-import PipelineFactory from '../factory/PipelineFactory';
-import PhpmdSettingsModel from '../model/PhpmdSettingsModel';
-import PipelinePayloadModel from '../model/PipelinePayloadModel';
+    CompletionItem, CompletionItemKind, createConnection, Diagnostic,
+    DiagnosticSeverity, IConnection, InitializeParams, InitializeResult,
+    IPCMessageReader, IPCMessageWriter, TextDocument, TextDocumentIdentifier,
+    TextDocumentPositionParams, TextDocuments, TextDocumentSyncKind,
+} from "vscode-languageserver";
+import PipelineFactory from "../factory/PipelineFactory";
+import IPhpmdSettingsModel from "../model/IPhpmdSettingsModel";
+import PipelinePayloadModel from "../model/PipelinePayloadModel";
 
-class PhpmdController
-{
+class PhpmdController {
     constructor(
         private connection: IConnection,
-        private settings: PhpmdSettingsModel
+        private settings: IPhpmdSettingsModel
     ) { }
 
-    public Validate(document: TextDocument | TextDocumentIdentifier)
-    {
+    public Validate(document: TextDocument | TextDocumentIdentifier) {
         let payload = new PipelinePayloadModel(document.uri);
 
         this.getPipeline().run(payload).then((output) => {
@@ -28,8 +25,7 @@ class PhpmdController
         });
     }
 
-    protected getPipeline()
-    {
+    protected getPipeline() {
         return new PipelineFactory(this.settings).create();
     }
 }
