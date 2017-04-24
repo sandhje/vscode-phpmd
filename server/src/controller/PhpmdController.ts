@@ -9,7 +9,7 @@ import PipelineFactory from '../factory/PipelineFactory';
 import PhpmdSettingsModel from '../model/PhpmdSettingsModel';
 import PipelinePayloadModel from '../model/PipelinePayloadModel';
 
-class PhpmdServerController
+class PhpmdController
 {
     constructor(
         private connection: IConnection,
@@ -34,4 +34,4 @@ class PhpmdServerController
     }
 }
 
-export default PhpmdServerController;
+export default PhpmdController;

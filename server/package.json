@@ -1,6 +1,6 @@
 {
   "name": "vscode-phpmd-server",
-  "description": "VScode PHP Mess Detector language server",
+  "description": "Visual Studio Code PHP Mess Detector language server",
   "version": "0.1.0",
   "author": "Sandhjé Bouw",
   "license": "MIT",
@@ -17,16 +17,40 @@
     "@types/chai": "^3.4.34",
     "@types/mocha": "^2.2.37",
     "@types/node": "^6.0.52",
+    "@types/sinon": "^2.1.2",
     "@types/xml2js": "^0.0.32",
     "chai": "^3.5.0",
+    "codecov.io": "^0.1.6",
     "mocha": "^3.2.0",
     "mocha-typescript": "^1.0.15",
+    "nyc": "^10.2.0",
+    "sinon": "^2.1.0",
+    "source-map-support": "^0.4.14",
     "ts-node": "^2.0.0",
+    "tslint": "^4.5.1",
     "typescript": "^2.1.4"
   },
   "scripts": {
-    "test": "mocha --opts mocha.opts",
+    "test": "nyc mocha --opts mocha.opts",
+    "report-coverage": "nyc report --reporter=json",
     "compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
     "watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc --watch -p ."
+  },
+  "nyc": {
+    "include": [
+      "src/*.ts",
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary"
+    ],
+    "sourceMap": true,
+    "instrument": true
   }
 }
