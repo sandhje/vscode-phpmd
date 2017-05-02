@@ -4,7 +4,7 @@
   "author": "Sandhjé Bouw",
   "license": "MIT",
   "version": "0.0.1",
-  "publisher": "Ecodes.io",
+  "publisher": "ecodes",
   "engines": {
     "vscode": "^1.8.0"
   },
