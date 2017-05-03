@@ -20,12 +20,14 @@ class PhpmdController {
     ) { }
 
     public Validate(document: TextDocument | TextDocumentIdentifier) {
+        // this.connection.console.log("PHP Mess Detector validation started.");
         let payload = this.getPipelinePayloadFactory().setUri(document.uri).create();
 
         this.getPipeline().run(payload).then((output) => {
             let diagnostics = output.diagnostics;
 
             // Send the computed diagnostics to VSCode.
+            // this.connection.console.log("PHP Mess Detector validation completed. Sending diagnostics now.");
             this.connection.sendDiagnostics({uri: output.uri, diagnostics});
         });
     }

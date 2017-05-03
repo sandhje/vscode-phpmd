@@ -25,8 +25,8 @@ connection.onInitialize((params): InitializeResult => {
 
 let controller: PhpmdController;
 let defaults: IPhpmdSettingsModel = {
+    configurationFile: "",
     executable: "C:/Users/sbouw/AppData/Roaming/Composer/vendor/bin/phpmd.bat",
-    maxNumberOfProblems: 100,
     rules: "cleancode,codesize,controversial,design,unusedcode,naming"
 };
 

@@ -1,5 +1,5 @@
 interface IPhpmdSettingsModel {
-    maxNumberOfProblems: Number;
+    configurationFile: string;
 
     executable: string;
 

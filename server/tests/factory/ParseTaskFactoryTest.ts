@@ -6,7 +6,7 @@ import ParseTaskFactory from "../../src/factory/ParseTaskFactory";
 import IPhpmdSettingsModel from "../../src/model/IPhpmdSettingsModel";
 
 @suite("ParseTask factory")
-class PhpmdControllerTest {
+class ParseTaskFactoryTest {
 
     @test("Should create ParseTask instance")
     public assertCreate() {

@@ -6,7 +6,7 @@ import BuildDiagnosticsTaskFactory from "../../src/factory/BuildDiagnosticsTaskF
 import IPhpmdSettingsModel from "../../src/model/IPhpmdSettingsModel";
 
 @suite("BuildDiagnosticsTask factory")
-class PhpmdControllerTest {
+class BuildDiagnosticsTaskFactoryTest {
 
     @test("Should create BuildDiagnosticTask instance")
     public assertCreate() {

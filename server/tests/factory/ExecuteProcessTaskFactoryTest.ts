@@ -6,7 +6,7 @@ import ExecuteProcessTaskFactory from "../../src/factory/ExecuteProcessTaskFacto
 import IPhpmdSettingsModel from "../../src/model/IPhpmdSettingsModel";
 
 @suite("ExecuteProcessTask factory")
-class PhpmdControllerTest {
+class ExecuteProcessTaskFactoryTest {
 
     @test("Should create ExecuteProcessTask instance")
     public assertCreate() {
