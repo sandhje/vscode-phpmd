@@ -3,6 +3,8 @@ import * as Process from "child_process";
 import PipelinePayloadModel from "../../model/PipelinePayloadModel";
 
 class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
+    private exec: (command: string) => Process.ChildProcess;
+
     public constructor(
         private executable: string,
         private rules: string
@@ -20,10 +22,23 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
         });
     };
 
+    public setExecutor(exec: (command: string) => Process.ChildProcess) {
+        this.exec = exec;
+    }
+
+    protected getExecutor() {
+        if (!this.exec) {
+            this.exec = Process.exec;
+        }
+
+        return this.exec;
+    }
+
     protected executeProcess(path: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             let result: string;
-            let process: Process.ChildProcess = Process.exec(this.executable + " " + path + " xml " + this.rules);
+            let exec = this.getExecutor();
+            let process: Process.ChildProcess = exec(this.executable + " " + path + " xml " + this.rules);
 
             process.stdout.setEncoding("utf8");
 
