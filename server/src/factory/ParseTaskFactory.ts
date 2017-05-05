@@ -1,18 +1,16 @@
-import IFactory from './IFactory';
-import PipelinePayloadModel from '../model/PipelinePayloadModel';
-import PhpmdSettingsModel from '../model/PhpmdSettingsModel';
-import ParseStrategy from '../service/pipeline/ParseStrategy';
-import { Task } from '@open-sourcerers/j-stillery';
-import * as Xml2Js from 'xml2js';
+import { Task } from "@open-sourcerers/j-stillery";
+import * as Xml2Js from "xml2js";
+import IPhpmdSettingsModel from "../model/IPhpmdSettingsModel";
+import PipelinePayloadModel from "../model/PipelinePayloadModel";
+import ParseStrategy from "../service/pipeline/ParseStrategy";
+import IFactory from "./IFactory";
 
-class ExecuteProcessTaskFactory implements IFactory<Task<PipelinePayloadModel>>
-{
+class ExecuteProcessTaskFactory implements IFactory<Task<PipelinePayloadModel>> {
     constructor(
-        private settings: PhpmdSettingsModel
+        private settings: IPhpmdSettingsModel
     ) { }
 
-    create(): Task<PipelinePayloadModel>
-    {
+    public create(): Task<PipelinePayloadModel> {
         let strategy = new ParseStrategy(this.getParser());
 
         return new Task<PipelinePayloadModel>(strategy);
@@ -23,4 +21,4 @@ class ExecuteProcessTaskFactory implements IFactory<Task<PipelinePayloadModel>>
     }
 }
 
-export default ExecuteProcessTaskFactory
+export default ExecuteProcessTaskFactory;
