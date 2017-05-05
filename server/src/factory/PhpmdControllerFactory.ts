@@ -1,19 +1,17 @@
-import { IConnection } from 'vscode-languageserver';
-import PhpmdSettingsModel from '../model/PhpmdSettingsModel';
-import IFactory from './IFactory';
-import PhpmdController from '../controller/PhpmdController';
+import { IConnection } from "vscode-languageserver";
+import PhpmdController from "../controller/PhpmdController";
+import IPhpmdSettingsModel from "../model/IPhpmdSettingsModel";
+import IFactory from "./IFactory";
 
-class PhpmdControllerFactory implements IFactory<PhpmdController>
-{
+class PhpmdControllerFactory implements IFactory<PhpmdController> {
     constructor(
         private connection: IConnection,
-        private settings: PhpmdSettingsModel
+        private settings: IPhpmdSettingsModel
     ) { }
 
-    create(): PhpmdController
-    {
+    public create(): PhpmdController {
         return new PhpmdController(this.connection, this.settings);
     }
 }
 
-export default PhpmdControllerFactory
+export default PhpmdControllerFactory;

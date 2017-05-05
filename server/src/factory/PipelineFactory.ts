@@ -1,19 +1,17 @@
-import IFactory from './IFactory';
-import PhpmdSettingsModel from '../model/PhpmdSettingsModel';
-import PipelinePayloadModel from '../model/PipelinePayloadModel';
-import ExecuteProcessTaskFactory from './ExecuteProcessTaskFactory';
-import ParseTaskFactory from './ParseTaskFactory';
-import BuildDiagnosticsTaskFactory from './BuildDiagnosticsTaskFactory';
-import { Pipeline } from '@open-sourcerers/j-stillery';
+import { Pipeline } from "@open-sourcerers/j-stillery";
+import IPhpmdSettingsModel from "../model/IPhpmdSettingsModel";
+import PipelinePayloadModel from "../model/PipelinePayloadModel";
+import BuildDiagnosticsTaskFactory from "./BuildDiagnosticsTaskFactory";
+import ExecuteProcessTaskFactory from "./ExecuteProcessTaskFactory";
+import IFactory from "./IFactory";
+import ParseTaskFactory from "./ParseTaskFactory";
 
-class PipelineFactory implements IFactory<Pipeline<PipelinePayloadModel>>
-{
+class PipelineFactory implements IFactory<Pipeline<PipelinePayloadModel>> {
     constructor(
-        private settings: PhpmdSettingsModel
+        private settings: IPhpmdSettingsModel
     ) { }
 
-    create(): Pipeline<PipelinePayloadModel>
-    {
+    public create(): Pipeline<PipelinePayloadModel> {
         let pipeline = new Pipeline<PipelinePayloadModel>()
             .pipe(new ExecuteProcessTaskFactory(this.settings).create())
             .pipe(new ParseTaskFactory(this.settings).create())
@@ -23,4 +21,4 @@ class PipelineFactory implements IFactory<Pipeline<PipelinePayloadModel>>
     }
 }
 
-export default PipelineFactory
+export default PipelineFactory;

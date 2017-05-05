@@ -1,9 +1,8 @@
-import Uri from 'vscode-uri';
-import { Diagnostic } from 'vscode-languageserver';
-import { Pmd } from './pmd';
+import { Diagnostic } from "vscode-languageserver";
+import Uri from "vscode-uri";
+import { IPmd } from "./pmd";
 
-class PipelinePayloadModel
-{
+class PipelinePayloadModel {
     public uri: string = "";
 
     public get path(): string {
@@ -12,9 +11,9 @@ class PipelinePayloadModel
 
     public raw: string = "";
 
-    public pmd: Pmd;
+    public pmd: IPmd;
 
-    public diagnostics: Array<Diagnostic> = [];
+    public diagnostics: Diagnostic[] = [];
 
     public constructor(uri: string) {
         this.uri = uri;
