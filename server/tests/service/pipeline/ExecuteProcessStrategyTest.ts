@@ -10,7 +10,7 @@ import ExecuteProcessStrategy from "../../../src/service/pipeline/ExecuteProcess
 class ExecuteProcessStrategyTest {
 
     @test("Should resolve with an array of diagnostic instances")
-    public assertResolveDiagnostics(done) {
+    public assertResolveExecute(done) {
         // Arrange
         // =======
         // Fake resolve callback

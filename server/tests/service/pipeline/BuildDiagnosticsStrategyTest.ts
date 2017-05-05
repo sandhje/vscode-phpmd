@@ -54,7 +54,7 @@ class BuildDiagnosticsStrategyTest {
         input.pmd.file[0].violation[0].$.ruleset = "TestRuleSet";
         input.diagnostics = <Diagnostic[]> [];
 
-        // Create and configure factory instance
+        // Create and configure strategy instance
         let strategy = new BuildDiagnosticsStrategy();
 
         // Act
