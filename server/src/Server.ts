@@ -8,66 +8,72 @@ import IPhpmdSettingsModel from "./model/IPhpmdSettingsModel";
 
 class Server {
     private connection: IConnection;
+    private controller: PhpmdController;
+    private documentsManager: TextDocuments;
+
+    public setConnection(connection: IConnection) {
+        this.connection = connection;
+    }
+
+    public setDocumentsManager(documentsManager: TextDocuments) {
+        this.documentsManager = documentsManager;
+    }
 
     public main(): void {
-        let documents: TextDocuments = new TextDocuments();
+        let documentsManager: TextDocuments = this.getDocumentsManager();
         let connection: IConnection = this.getConnection();
 
-        documents.listen(connection);
+        // Manage documents for connection
+        documentsManager.listen(connection);
 
-        let workspaceRoot: string;
-        connection.onInitialize((params): InitializeResult => {
-            workspaceRoot = params.rootPath;
-            return {
-                capabilities: {
-                    textDocumentSync: documents.syncKind,
-                }
-            };
-        });
-
-        let controller: PhpmdController;
-        let defaults: IPhpmdSettingsModel = {
-            configurationFile: "",
-            executable: "C:/Users/sbouw/AppData/Roaming/Composer/vendor/bin/phpmd.bat",
-            rules: "cleancode,codesize,controversial,design,unusedcode,naming"
-        };
-
-        // The settings have changed. Is send on server activation
-        // as well.
+        // The settings have changed. Is send on server activation as well.
         connection.onDidChangeConfiguration((change) => {
-            let settings: IPhpmdSettingsModel = Object.assign<IPhpmdSettingsModel, any>(
-                defaults,
-                change.settings.phpmd
-            );
+            connection.console.info("Configuration change triggerd, validating all open documents.");
 
-            controller = new PhpmdControllerFactory(connection, settings).create();
+            let settings = this.createSettings(change.settings.phpmd);
+            this.createController(connection, settings);
 
             // Revalidate any open text documents
-            documents.all().forEach((document: TextDocument) => {
-                controller.Validate(document);
+            documentsManager.all().forEach((document: TextDocument) => {
+                this.getController().Validate(document);
             });
         });
 
         // A php document was opened
         connection.onDidOpenTextDocument((parameters) => {
+            connection.console.info("New document opened, starting validation.");
+
             let document: TextDocumentIdentifier = parameters.textDocument;
 
-            controller.Validate(document);
+            this.getController().Validate(document);
         });
 
         // A php document was saved
         connection.onDidSaveTextDocument((parameters) => {
+            connection.console.info("Document saved, starting validation.");
+
             let document: TextDocumentIdentifier = parameters.textDocument;
 
-            controller.Validate(document);
+            this.getController().Validate(document);
+        });
+
+        // Set connection capabilities
+        connection.onInitialize((params) => {
+            connection.console.info("Language server connection initialized.");
+
+            return this.getInitializeResult();
         });
 
         // Listen on the connection
         connection.listen();
     }
 
-    public setConnection(connection: IConnection) {
-        this.connection = connection;
+    protected getInitializeResult(): InitializeResult {
+        return {
+            capabilities: {
+                textDocumentSync: this.getDocumentsManager().syncKind,
+            }
+        };
     }
 
     protected getConnection() {
@@ -76,6 +82,39 @@ class Server {
         }
 
         return this.connection;
+    }
+
+    protected getDocumentsManager(): TextDocuments {
+        if (!this.documentsManager) {
+            this.documentsManager = new TextDocuments();
+        }
+
+        return this.documentsManager;
+    }
+
+    protected createSettings(values: any): IPhpmdSettingsModel {
+        let defaults: IPhpmdSettingsModel = {
+            configurationFile: "",
+            executable: "C:/Users/sbouw/AppData/Roaming/Composer/vendor/bin/phpmd.bat",
+            rules: "cleancode,codesize,controversial,design,unusedcode,naming"
+        };
+
+        let settings: IPhpmdSettingsModel = Object.assign<IPhpmdSettingsModel, any>(defaults, values);
+
+        return settings;
+    }
+
+    protected createController(connection: IConnection, settings: IPhpmdSettingsModel) {
+        this.controller = new PhpmdControllerFactory(connection, settings).create();
+    }
+
+    protected getController() {
+        if (!this.controller) {
+            this.getConnection().console.error("Controller not initialized. Aborting");
+            throw Error("Controller not initialized. Aborting");
+        }
+
+        return this.controller;
     }
 }
 
