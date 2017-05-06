@@ -6,7 +6,7 @@ import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } f
 
 export function activate(context: ExtensionContext) {
 
-	let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
+	let serverModule = context.asAbsolutePath(path.join('server', 'init.js'));
 
 	// Server debug options
 	let debugOptions = { execArgv: ["--nolazy", "--debug=6009"] };
