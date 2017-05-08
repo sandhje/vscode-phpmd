@@ -54,7 +54,7 @@ class ExecuteProcessStrategyTest {
         // Fake executor
         let executor = (command: string) => {
             return process;
-        }
+        };
 
         // Initialise strategy and configure
         let strategy = new ExecuteProcessStrategy(executable, rules);

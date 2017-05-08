@@ -191,7 +191,7 @@ class ServerTest {
         let connection = <IConnection> {};
         connection.onDidChangeConfiguration = () => { /* Fake */ };
         connection.onDidOpenTextDocument = () => { /* Fake */ };
-        connection.onDidOpenTextDocument = onDidSaveTextDocumentStub;
+        connection.onDidSaveTextDocument = onDidSaveTextDocumentStub;
 
         // Fake controller
         let controller = <PhpmdController> {};
