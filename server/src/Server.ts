@@ -9,14 +9,23 @@ import IPhpmdSettingsModel from "./model/IPhpmdSettingsModel";
 class Server {
     private connection: IConnection;
     private controller: PhpmdController;
+    private controllerFactory: PhpmdControllerFactory;
     private documentsManager: TextDocuments;
 
     public setConnection(connection: IConnection) {
         this.connection = connection;
     }
 
+    public setControllerFactory(controllerFactory: PhpmdControllerFactory) {
+        this.controllerFactory = controllerFactory;
+    }
+
     public setDocumentsManager(documentsManager: TextDocuments) {
         this.documentsManager = documentsManager;
+    }
+
+    public setController(controller: PhpmdController) {
+        this.controller = controller;
     }
 
     public main(): void {
@@ -28,7 +37,7 @@ class Server {
 
         // The settings have changed. Is send on server activation as well.
         connection.onDidChangeConfiguration((change) => {
-            connection.console.info("Configuration change triggerd, validating all open documents.");
+            // connection.console.info("Configuration change triggerd, validating all open documents.");
 
             let settings = this.createSettings(change.settings.phpmd);
             this.createController(connection, settings);
@@ -41,7 +50,7 @@ class Server {
 
         // A php document was opened
         connection.onDidOpenTextDocument((parameters) => {
-            connection.console.info("New document opened, starting validation.");
+            // connection.console.info("New document opened, starting validation.");
 
             let document: TextDocumentIdentifier = parameters.textDocument;
 
@@ -50,7 +59,7 @@ class Server {
 
         // A php document was saved
         connection.onDidSaveTextDocument((parameters) => {
-            connection.console.info("Document saved, starting validation.");
+            // connection.console.info("Document saved, starting validation.");
 
             let document: TextDocumentIdentifier = parameters.textDocument;
 
@@ -59,7 +68,7 @@ class Server {
 
         // Set connection capabilities
         connection.onInitialize((params) => {
-            connection.console.info("Language server connection initialized.");
+            // connection.console.info("Language server connection initialized.");
 
             return this.getInitializeResult();
         });
@@ -92,6 +101,14 @@ class Server {
         return this.documentsManager;
     }
 
+    protected getControllerFactory() {
+        if (!this.controllerFactory) {
+            this.controllerFactory = new PhpmdControllerFactory();
+        }
+
+        return this.controllerFactory;
+    }
+
     protected createSettings(values: any): IPhpmdSettingsModel {
         let defaults: IPhpmdSettingsModel = {
             configurationFile: "",
@@ -105,7 +122,11 @@ class Server {
     }
 
     protected createController(connection: IConnection, settings: IPhpmdSettingsModel) {
-        this.controller = new PhpmdControllerFactory(connection, settings).create();
+        let controllerFactory = this.getControllerFactory();
+        controllerFactory.setConnection(connection);
+        controllerFactory.setSettings(settings);
+
+        this.controller = controllerFactory.create();
     }
 
     protected getController() {
