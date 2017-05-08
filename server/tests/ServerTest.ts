@@ -16,7 +16,7 @@ class ServerTest {
         // Fake documentsManager
         let document = <TextDocument> {};
         let documentsManager = <TextDocuments> {};
-        
+
         // DocumentsManager listen spy
         let dmListenSpy = sinon.spy();
         documentsManager.listen = dmListenSpy;
@@ -35,7 +35,7 @@ class ServerTest {
         connection.onDidSaveTextDocument = () => { /* Fake */ };
         connection.onInitialize = onInitializeStub;
         connection.listen = connectionListenSpy;
-        
+
         // Create and configure server
         let server = new Server();
         server.setDocumentsManager(documentsManager);
