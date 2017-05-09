@@ -3,6 +3,7 @@ import {
     TextDocument, TextDocumentIdentifier, TextDocuments
 } from "vscode-languageserver";
 import PhpmdController from "./controller/PhpmdController";
+import ILoggerFactory from "./factory/ILoggerFactory";
 import PhpmdControllerFactory from "./factory/PhpmdControllerFactory";
 import RemoteConsoleLoggerFactory from "./factory/RemoteConsoleLoggerFactory";
 import IPhpmdSettingsModel from "./model/IPhpmdSettingsModel";
@@ -15,7 +16,7 @@ class Server {
     private controllerFactory: PhpmdControllerFactory;
     private documentsManager: TextDocuments;
     private logger: ILogger;
-    private loggerFactory: RemoteConsoleLoggerFactory;
+    private loggerFactory: ILoggerFactory;
 
     public setConnection(connection: IConnection) {
         this.connection = connection;
@@ -25,7 +26,7 @@ class Server {
         this.controllerFactory = controllerFactory;
     }
 
-    public setLoggerFactory(loggerFactory: RemoteConsoleLoggerFactory) {
+    public setLoggerFactory(loggerFactory: ILoggerFactory) {
         this.loggerFactory = loggerFactory;
     }
 

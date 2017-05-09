@@ -1,12 +1,13 @@
 import { IConnection } from "vscode-languageserver";
+import ILogger from "../service/logger/ILogger";
 import RemoteConsoleLogger from "../service/logger/RemoteConsoleLogger";
-import IFactory from "./IFactory";
+import ILoggerFactory from "./ILoggerFactory";
 
-class RemoteConsoleLoggerFactory implements IFactory<RemoteConsoleLogger> {
+class RemoteConsoleLoggerFactory implements ILoggerFactory {
     private connection: IConnection;
     private verbose: boolean = false;
 
-    public create(): RemoteConsoleLogger {
+    public create(): ILogger {
         if (!this.connection) {
             throw Error("Unable to create RemoteConsoleLogger, no connection set");
         }

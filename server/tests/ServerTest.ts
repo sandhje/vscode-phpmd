@@ -3,7 +3,9 @@ import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
 import * as sinon from "sinon";
 import { IConnection, TextDocument, TextDocumentIdentifier, TextDocuments } from "vscode-languageserver";
 import PhpmdController from "../src/controller/PhpmdController";
+import NullLoggerFactory from "../src/factory/NullLoggerFactory";
 import PhpmdControllerFactory from "../src/factory/PhpmdControllerFactory";
+import RemoteConsoleLoggerFactory from "../src/factory/RemoteConsoleLoggerFactory";
 import Server from "../src/Server";
 
 @suite("PhpMD language server")
@@ -40,6 +42,7 @@ class ServerTest {
         let server = new Server();
         server.setDocumentsManager(documentsManager);
         server.setConnection(connection);
+        server.setLoggerFactory(new NullLoggerFactory());
 
         // Act
         server.main();
@@ -111,6 +114,7 @@ class ServerTest {
         server.setDocumentsManager(documentsManager);
         server.setConnection(connection);
         server.setControllerFactory(controllerFactory);
+        server.setLoggerFactory(new NullLoggerFactory());
 
         // Act
         server.main();
@@ -158,6 +162,7 @@ class ServerTest {
         server.setDocumentsManager(documentsManager);
         server.setConnection(connection);
         server.setController(controller);
+        server.setLoggerFactory(new NullLoggerFactory());
 
         // Act
         server.main();
@@ -206,6 +211,7 @@ class ServerTest {
         server.setDocumentsManager(documentsManager);
         server.setConnection(connection);
         server.setController(controller);
+        server.setLoggerFactory(new NullLoggerFactory());
 
         // Act
         server.main();
