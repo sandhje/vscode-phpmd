@@ -21,7 +21,7 @@ export function activate(context: ExtensionContext) {
 	let clientOptions: LanguageClientOptions = {
 		documentSelector: ['php'],
 		synchronize: {
-			configurationSection: 'PHP Mess Detector'
+			configurationSection: 'phpmd'
 		}
 	}
 	
