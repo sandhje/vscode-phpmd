@@ -1,7 +1,7 @@
 {
   "name": "vscode-phpmd-server",
   "description": "Visual Studio Code PHP Mess Detector language server",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Sandhjé Bouw",
   "license": "MIT",
   "engines": {
