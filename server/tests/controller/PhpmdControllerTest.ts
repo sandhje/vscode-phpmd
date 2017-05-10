@@ -7,6 +7,7 @@ import PhpmdController from "../../src/controller/PhpmdController";
 import PipelinePayloadFactory from "../../src/factory/PipelinePayloadFactory";
 import IPhpmdSettingsModel from "../../src/model/IPhpmdSettingsModel";
 import PipelinePayloadModel from "../../src/model/PipelinePayloadModel";
+import NullLogger from "../../src/service/logger/NullLogger";
 
 @suite("PhpMD controller")
 class PhpmdControllerTest {
@@ -72,6 +73,7 @@ class PhpmdControllerTest {
         let controller = new PhpmdController(connection, settings);
         controller.setPipeline(pipeline);
         controller.setPipelinePayloadFactory(pipelinePayloadFactory);
+        controller.setLogger(new NullLogger());
 
         // Act
         // ===
