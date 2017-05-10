@@ -21,7 +21,9 @@ class PhpmdControllerFactoryTest {
         let settings = <IPhpmdSettingsModel> {};
 
         // Create and configure factory instance
-        let factory = new PhpmdControllerFactory(connection, settings);
+        let factory = new PhpmdControllerFactory();
+        factory.setConnection(connection);
+        factory.setSettings(settings);
 
         // Act
         let controller = factory.create();

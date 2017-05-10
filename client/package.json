@@ -3,7 +3,7 @@
   "description": "VSCode plugin for PHP Mess Detector",
   "author": "Sandhjé Bouw",
   "license": "MIT",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "ecodes",
   "engines": {
     "vscode": "^1.8.0"
@@ -38,6 +38,11 @@
           "type": "string",
           "default": "",
           "description": "Phpmd configuration file (overwrites 'phpmd.rules' if not empty)"
+        },
+        "phpmd.verbose": {
+          "type": "boolean",
+          "default": false,
+          "description": "Do verbose logging"
         }
       }
     }
