@@ -1,12 +1,16 @@
 import ILogger from "./ILogger";
 
 class NullLogger implements ILogger {
+    private verbose: boolean = false;
+
     public setVerbose(verbose: boolean): this {
+        this.verbose = verbose;
+
         return this;
     }
 
     public getVerbose(): boolean {
-        return false;
+        return this.verbose;
     }
 
     public error(message: string, isVerbose?: boolean): this {
