@@ -24,7 +24,7 @@
       "type": "object",
       "title": "PHP Mess Detector configuration",
       "properties": {
-        "phpmd.location": {
+        "phpmd.executable": {
           "type": "string",
           "default": "",
           "description": "The location of the phpmd executable"

@@ -14,7 +14,11 @@ class ParseStrategy implements IExecuteStrategy<PipelinePayloadModel> {
         reject: (reason: any) => void
     ) {
         this.parser.parseString(input.raw, (error, result) => {
-            input.pmd = <IPmd> result.pmd || null;
+            if (!result) {
+                result = { pmd: null };
+            }
+
+            input.pmd = <IPmd> result.pmd;
 
             resolve(input);
         });
