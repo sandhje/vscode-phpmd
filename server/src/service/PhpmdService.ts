@@ -9,6 +9,10 @@ class PhpmdService {
         return this.execute(this.executable + " --version");
     }
 
+    public run(options: string): Promise<string> {
+        return this.execute(this.executable + " " + options);
+    }
+
     public setExecutor(exec: (command: string) => Process.ChildProcess) {
         this.exec = exec;
     }
