@@ -141,8 +141,8 @@ class Server {
     protected createSettings(values: any): IPhpmdSettingsModel {
         let defaults: IPhpmdSettingsModel = {
             configurationFile: "",
-            executable: "C:/Users/sbouw/AppData/Roaming/Composer/vendor/bin/phpmd.bat",
-            rules: "cleancode,codesize,controversial,design,unusedcode,naming",
+            executable: "",
+            rules: "",
             verbose: false
         };
 
