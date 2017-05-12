@@ -3,7 +3,7 @@ import {
     CompletionItem, CompletionItemKind, createConnection, Diagnostic,
     DiagnosticSeverity, IConnection, InitializeParams, InitializeResult,
     IPCMessageReader, IPCMessageWriter, TextDocument, TextDocumentIdentifier,
-    TextDocumentPositionParams, TextDocuments, TextDocumentSyncKind,
+    TextDocumentPositionParams, TextDocuments, TextDocumentSyncKind
 } from "vscode-languageserver";
 import PipelineFactory from "../factory/PipelineFactory";
 import PipelinePayloadFactory from "../factory/PipelinePayloadFactory";
@@ -11,11 +11,15 @@ import IPhpmdSettingsModel from "../model/IPhpmdSettingsModel";
 import PipelinePayloadModel from "../model/PipelinePayloadModel";
 import ILogger from "../service/logger/ILogger";
 import NullLogger from "../service/logger/NullLogger";
+import INotifier from "../service/notifier/INotifier";
+import NullNotifier from "../service/notifier/NullNotifier";
+import PhpmdService from "../service/PhpmdService";
 
 class PhpmdController {
     private pipeline: Pipeline<PipelinePayloadModel>;
     private pipelinePayloadFactory: PipelinePayloadFactory;
     private logger: ILogger;
+    private notifier: INotifier;
 
     constructor(
         private connection: IConnection,
@@ -23,16 +27,25 @@ class PhpmdController {
     ) { }
 
     public Validate(document: TextDocument | TextDocumentIdentifier) {
+        // Test version
         this.getLogger().info("PHP Mess Detector validation started for " + document.uri, true);
-        let payload = this.getPipelinePayloadFactory().setUri(document.uri).create();
 
-        this.getPipeline().run(payload).then((output) => {
-            let diagnostics = output.diagnostics;
+        let service = new PhpmdService(this.settings.executable);
+        service.getVersion().then((data: string) => {
+            this.getLogger().info("PHP Mess Detector version check succesful (" + data + ")", true);
+            let payload = this.getPipelinePayloadFactory().setUri(document.uri).create();
 
-            // Send the computed diagnostics to VSCode.
-            this.getLogger().info("PHP Mess Detector validation completed for " + document.uri + ". " + diagnostics.length + " problems found", true);
-            this.connection.sendDiagnostics({uri: output.uri, diagnostics});
+            this.getPipeline().run(payload).then((output) => {
+                let diagnostics = output.diagnostics;
+
+                // Send the computed diagnostics to VSCode.
+                this.getLogger().info("PHP Mess Detector validation completed for " + document.uri + ". " + diagnostics.length + " problems found", true);
+                this.connection.sendDiagnostics({uri: output.uri, diagnostics});
+            });
+        }, (err: Error) => {
+            this.getNotifier().error("PHP Mess Detector executable not found");
         });
+
     }
 
     public setPipeline(pipeline: Pipeline<PipelinePayloadModel>): void {
@@ -45,6 +58,10 @@ class PhpmdController {
 
     public setLogger(logger: ILogger): void {
         this.logger = logger;
+    }
+
+    public setNotifier(notifier: INotifier): void {
+        this.notifier = notifier;
     }
 
     protected getPipeline() {
@@ -69,6 +86,14 @@ class PhpmdController {
         }
 
         return this.logger;
+    }
+
+    protected getNotifier(): INotifier {
+        if (!this.notifier) {
+            this.notifier = new NullNotifier();
+        }
+
+        return this.notifier;
     }
 }
 
