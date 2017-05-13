@@ -8,6 +8,7 @@ import PipelinePayloadFactory from "../../src/factory/PipelinePayloadFactory";
 import IPhpmdSettingsModel from "../../src/model/IPhpmdSettingsModel";
 import PipelinePayloadModel from "../../src/model/PipelinePayloadModel";
 import NullLogger from "../../src/service/logger/NullLogger";
+import PhpmdService from "../../src/service/PhpmdService";
 
 @suite("PhpMD controller")
 class PhpmdControllerTest {
@@ -45,6 +46,14 @@ class PhpmdControllerTest {
         diagnostic.source = "Test";
         diagnostic.message = "Lorem ipsum dolor";
 
+        // GetVersion stub
+        let getVersionStub = sinon.stub();
+        getVersionStub.returns(Promise.resolve("Phpmd version"));
+
+        // Fake service
+        let service = <PhpmdService> {};
+        service.getVersion = getVersionStub;
+
         // Fake pipeline payload
         let payload = <PipelinePayloadModel> {};
         payload.uri = document.uri;
@@ -74,6 +83,7 @@ class PhpmdControllerTest {
         controller.setPipeline(pipeline);
         controller.setPipelinePayloadFactory(pipelinePayloadFactory);
         controller.setLogger(new NullLogger());
+        controller.setService(service);
 
         // Act
         // ===
