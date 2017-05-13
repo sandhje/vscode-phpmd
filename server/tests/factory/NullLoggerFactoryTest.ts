@@ -4,7 +4,7 @@ import * as sinon from "sinon";
 import NullLoggerFactory from "../../src/factory/NullLoggerFactory";
 import NullLogger from "../../src/service/logger/NullLogger";
 
-@suite("Null factory")
+@suite("Null logger factory")
 class NullLoggerFactoryTest {
 
     @test("Should create NullLogger instance")
