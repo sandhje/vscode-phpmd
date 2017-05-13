@@ -3,7 +3,7 @@
   "description": "VSCode plugin for PHP Mess Detector",
   "author": "Sandhjé Bouw",
   "license": "MIT",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "ecodes",
   "engines": {
     "vscode": "^1.8.0"
