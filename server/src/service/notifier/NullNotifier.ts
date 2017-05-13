@@ -1,7 +1,7 @@
 import INotifier from "./INotifier";
 
 class NullNotifier implements INotifier {
-    public error(): this {
+    public error(message: string): this {
         return this;
     }
 }
