@@ -28,17 +28,12 @@
         "phpmd.rules": {
           "type": "string",
           "default": "cleancode,codesize,controversial,design,unusedcode,naming",
-          "description": "Phpmd ruleset"
-        },
-        "phpmd.configurationFile": {
-          "type": "string",
-          "default": "",
-          "description": "Phpmd configuration file (overwrites 'phpmd.rules' if not empty)"
+          "description": "Phpmd ruleset (comma separated list of rulesets or the location of a config file)"
         },
         "phpmd.verbose": {
           "type": "boolean",
           "default": false,
-          "description": "Do verbose logging"
+          "description": "Enable verbose logging"
         }
       }
     }
