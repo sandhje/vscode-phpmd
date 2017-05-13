@@ -41,6 +41,8 @@ class PhpmdController {
                 // Send the computed diagnostics to VSCode.
                 this.getLogger().info("PHP Mess Detector validation completed for " + document.uri + ". " + diagnostics.length + " problems found", true);
                 this.connection.sendDiagnostics({uri: output.uri, diagnostics});
+            }, (err: Error) => {
+                this.getNotifier().error("An error occured while executing PHP Mess Detector");
             });
         }, (err: Error) => {
             this.getNotifier().error("PHP Mess Detector executable not found");

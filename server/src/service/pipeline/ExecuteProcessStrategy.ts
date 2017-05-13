@@ -20,6 +20,8 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
             input.raw = data;
 
             resolve(input);
+        }, (err: Error) => {
+            reject(err);
         });
     };
 
