@@ -2,7 +2,6 @@ import { assert, expect } from "chai";
 import * as Process from "child_process";
 import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
 import * as sinon from "sinon";
-import * as stream from "stream";
 import PipelinePayloadModel from "../../../src/model/PipelinePayloadModel";
 import PhpmdService from "../../../src/service/PhpmdService";
 import ExecuteProcessStrategy from "../../../src/service/pipeline/ExecuteProcessStrategy";
