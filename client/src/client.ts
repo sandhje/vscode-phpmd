@@ -21,7 +21,7 @@ export function activate(context: ExtensionContext) {
 	let clientOptions: LanguageClientOptions = {
 		documentSelector: ['php'],
 		synchronize: {
-			configurationSection: 'PHP Mess Detector'
+			configurationSection: 'phpmd'
 		}
 	}
 	
@@ -29,7 +29,7 @@ export function activate(context: ExtensionContext) {
 	let client = new LanguageClient('vscode-phpmd', 'PHP Mess Detector', serverOptions, clientOptions)
 	let disposable = client.start();
 
-	console.log("PHP Mess Detector started");
+	console.log("PHP Mess Detector server started");
 	
 	// Push the disposable to the context's subscriptions so that the 
 	// client can be deactivated on extension deactivation

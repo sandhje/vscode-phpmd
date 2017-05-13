@@ -3,7 +3,7 @@
   "description": "VSCode plugin for PHP Mess Detector",
   "author": "Sandhjé Bouw",
   "license": "MIT",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "ecodes",
   "engines": {
     "vscode": "^1.8.0"
@@ -16,15 +16,11 @@
   ],
   "main": "./out/client",
   "contributes": {
-    "commands": [{
-        "command": "phpmd.run",
-        "title": "Run PHPMD"
-    }],
     "configuration": {
       "type": "object",
       "title": "PHP Mess Detector configuration",
       "properties": {
-        "phpmd.location": {
+        "phpmd.executable": {
           "type": "string",
           "default": "",
           "description": "The location of the phpmd executable"
@@ -32,17 +28,12 @@
         "phpmd.rules": {
           "type": "string",
           "default": "cleancode,codesize,controversial,design,unusedcode,naming",
-          "description": "Phpmd ruleset"
-        },
-        "phpmd.configurationFile": {
-          "type": "string",
-          "default": "",
-          "description": "Phpmd configuration file (overwrites 'phpmd.rules' if not empty)"
+          "description": "Phpmd ruleset (comma separated list of rulesets or the location of a config file)"
         },
         "phpmd.verbose": {
           "type": "boolean",
           "default": false,
-          "description": "Do verbose logging"
+          "description": "Enable verbose logging"
         }
       }
     }

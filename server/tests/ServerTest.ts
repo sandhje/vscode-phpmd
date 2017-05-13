@@ -96,6 +96,8 @@ class ServerTest {
             expect(documentToValidate).to.equal(document);
             done();
         };
+        controller.setLogger = sinon.stub();
+        controller.setNotifier = sinon.stub();
 
         // Fake controllerFactory
         let controllerFactory = <PhpmdControllerFactory> {};

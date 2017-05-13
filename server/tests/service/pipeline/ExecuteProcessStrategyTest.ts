@@ -2,8 +2,8 @@ import { assert, expect } from "chai";
 import * as Process from "child_process";
 import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
 import * as sinon from "sinon";
-import * as stream from "stream";
 import PipelinePayloadModel from "../../../src/model/PipelinePayloadModel";
+import PhpmdService from "../../../src/service/PhpmdService";
 import ExecuteProcessStrategy from "../../../src/service/pipeline/ExecuteProcessStrategy";
 
 @suite("ExectuteProcess strategy")
@@ -17,7 +17,7 @@ class ExecuteProcessStrategyTest {
         let resolve = (output: PipelinePayloadModel) => {
             // Assert
             // ======
-            expect(setEncodingSpy.called).to.be.true;
+            expect(runStub.calledOnce).to.be.true;
             expect(output.raw).to.equal("Test data");
             done();
         };
@@ -37,28 +37,18 @@ class ExecuteProcessStrategyTest {
         let input = <PipelinePayloadModel> {};
         input.uri = "/test/uri";
 
-        // Set encoding spy
-        let setEncodingSpy = sinon.spy();
+        // Run stub
+        let runStub = sinon.stub();
+        runStub.calledWithExactly("testExecutable /test/uri testRules");
+        runStub.returns(Promise.resolve("Test data"));
 
-        // On stub
-        let onStub = sinon.stub();
-        onStub.withArgs("data").callsArgWith(1, "Test data");
-        onStub.withArgs("close").callsArg(1);
-
-        // Fake process
-        let process = <Process.ChildProcess> {};
-        process.stdout = <stream.Readable> {};
-        process.stdout.setEncoding = setEncodingSpy;
-        process.stdout.on = onStub;
-
-        // Fake executor
-        let executor = (command: string) => {
-            return process;
-        };
+        // Fake service
+        let service = <PhpmdService> {};
+        service.run = runStub;
 
         // Initialise strategy and configure
         let strategy = new ExecuteProcessStrategy(executable, rules);
-        strategy.setExecutor(executor);
+        strategy.setService(service);
 
         // Act
         strategy.execute(input, resolve, reject);

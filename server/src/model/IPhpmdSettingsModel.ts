@@ -1,6 +1,4 @@
 interface IPhpmdSettingsModel {
-    configurationFile: string;
-
     executable: string;
 
     rules: string;

@@ -1,9 +1,10 @@
 import { IExecuteStrategy } from "@open-sourcerers/j-stillery";
 import * as Process from "child_process";
 import PipelinePayloadModel from "../../model/PipelinePayloadModel";
+import PhpmdService from "../PhpmdService";
 
 class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
-    private exec: (command: string) => Process.ChildProcess;
+    private service: PhpmdService;
 
     public constructor(
         private executable: string,
@@ -19,41 +20,25 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
             input.raw = data;
 
             resolve(input);
+        }, (err: Error) => {
+            reject(err);
         });
     };
 
-    public setExecutor(exec: (command: string) => Process.ChildProcess) {
-        this.exec = exec;
+    public setService(service: PhpmdService) {
+        this.service = service;
     }
 
-    protected getExecutor() {
-        if (!this.exec) {
-            this.exec = Process.exec;
+    protected getService() {
+        if (!this.service) {
+            this.service = new PhpmdService(this.executable);
         }
 
-        return this.exec;
+        return this.service;
     }
 
     protected executeProcess(path: string): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            let result: string;
-            let exec = this.getExecutor();
-            let process: Process.ChildProcess = exec(this.executable + " " + path + " xml " + this.rules);
-
-            process.stdout.setEncoding("utf8");
-
-            process.stdout.on("data", (data) => {
-                if (result) {
-                    data = result + data.toString();
-                }
-
-                result = data.toString();
-            });
-
-            process.stdout.on("close", (code) => {
-                resolve(result);
-            });
-        });
+        return this.getService().run(path + " xml " + this.rules);
     }
 }
 

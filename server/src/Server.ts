@@ -3,12 +3,16 @@ import {
     TextDocument, TextDocumentIdentifier, TextDocuments
 } from "vscode-languageserver";
 import PhpmdController from "./controller/PhpmdController";
+import ClientConnectionNotifierFactory from "./factory/ClientConnectionNotifierFactory";
 import ILoggerFactory from "./factory/ILoggerFactory";
+import INotifierFactory from "./factory/INotifierFactory";
 import PhpmdControllerFactory from "./factory/PhpmdControllerFactory";
 import RemoteConsoleLoggerFactory from "./factory/RemoteConsoleLoggerFactory";
 import IPhpmdSettingsModel from "./model/IPhpmdSettingsModel";
 import ILogger from "./service/logger/ILogger";
 import NullLogger from "./service/logger/NullLogger";
+import INotifier from "./service/notifier/INotifier";
+import NullNotifier from "./service/notifier/NullNotifier";
 
 class Server {
     private connection: IConnection;
@@ -17,6 +21,8 @@ class Server {
     private documentsManager: TextDocuments;
     private logger: ILogger;
     private loggerFactory: ILoggerFactory;
+    private notifier: INotifier;
+    private notifierFactory: INotifierFactory;
 
     public setConnection(connection: IConnection) {
         this.connection = connection;
@@ -28,6 +34,10 @@ class Server {
 
     public setLoggerFactory(loggerFactory: ILoggerFactory) {
         this.loggerFactory = loggerFactory;
+    }
+
+    public setNotifierFactory(notifierFactory: INotifierFactory) {
+        this.notifierFactory = notifierFactory;
     }
 
     public setDocumentsManager(documentsManager: TextDocuments) {
@@ -42,12 +52,19 @@ class Server {
         this.logger = logger;
     }
 
+    public setNotifier(notifier: INotifier) {
+        this.notifier = notifier;
+    }
+
     public main(): void {
         let documentsManager: TextDocuments = this.getDocumentsManager();
         let connection: IConnection = this.getConnection();
 
         // Create logger
         this.createLogger(connection);
+
+        // Create notifier
+        this.createNotifier(connection);
 
         // Manage documents for connection
         documentsManager.listen(connection);
@@ -138,11 +155,18 @@ class Server {
         return this.loggerFactory;
     }
 
+    protected getNotifierFactory() {
+        if (!this.notifierFactory) {
+            this.notifierFactory = new ClientConnectionNotifierFactory();
+        }
+
+        return this.notifierFactory;
+    }
+
     protected createSettings(values: any): IPhpmdSettingsModel {
         let defaults: IPhpmdSettingsModel = {
-            configurationFile: "",
-            executable: "C:/Users/sbouw/AppData/Roaming/Composer/vendor/bin/phpmd.bat",
-            rules: "cleancode,codesize,controversial,design,unusedcode,naming",
+            executable: "",
+            rules: "",
             verbose: false
         };
 
@@ -157,6 +181,8 @@ class Server {
         controllerFactory.setSettings(settings);
 
         this.controller = controllerFactory.create();
+        this.controller.setLogger(this.getLogger());
+        this.controller.setNotifier(this.getNotifier());
     }
 
     protected createLogger(connection: IConnection) {
@@ -164,6 +190,13 @@ class Server {
         loggerFactory.setConnection(connection);
 
         this.logger = loggerFactory.create();
+    }
+
+    protected createNotifier(connection: IConnection) {
+        let notifierFactory = this.getNotifierFactory();
+        notifierFactory.setConnection(connection);
+
+        this.notifier = notifierFactory.create();
     }
 
     protected getController() {
@@ -181,6 +214,14 @@ class Server {
         }
 
         return this.logger;
+    }
+
+    protected getNotifier(): INotifier {
+        if (!this.notifier) {
+            return new NullNotifier();
+        }
+
+        return this.notifier;
     }
 }
 
