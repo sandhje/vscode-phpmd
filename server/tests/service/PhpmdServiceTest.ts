@@ -118,7 +118,7 @@ class ServerTest {
         service.setExecutor(executor);
         service.run(options).then(null, (err: Error) => {
             // Assert
-            expect(err.message).to.equal("Phpmd executable not found");
+            expect(err.message).to.equal("An error occured, no output was received after executing the phpmd command");
             done();
         });
     }

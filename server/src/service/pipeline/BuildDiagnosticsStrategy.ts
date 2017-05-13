@@ -22,9 +22,10 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
     ) {
         let pmd = <IPmd> input.pmd;
 
-        if (pmd === null) {
+        if (pmd === null || typeof pmd.file === "undefined") {
             // If no pmd results found, resolve without diagnostics
             resolve(input);
+            return;
         }
 
         // For all files in Pmd result

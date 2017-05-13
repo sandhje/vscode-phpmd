@@ -43,7 +43,8 @@ class PhpmdService {
 
             process.stdout.on("close", () => {
                 if (!result) {
-                    reject(Error("Phpmd executable not found"));
+                    reject(Error("An error occured, no output was received after executing the phpmd command"));
+                    return;
                 }
 
                 resolve(result);
