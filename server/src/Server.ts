@@ -165,7 +165,6 @@ class Server {
 
     protected createSettings(values: any): IPhpmdSettingsModel {
         let defaults: IPhpmdSettingsModel = {
-            configurationFile: "",
             executable: "",
             rules: "",
             verbose: false

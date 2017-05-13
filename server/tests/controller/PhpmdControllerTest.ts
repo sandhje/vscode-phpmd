@@ -19,7 +19,6 @@ class PhpmdControllerTest {
         // =======
         // Fake settings
         let settings = <IPhpmdSettingsModel> {
-            configurationFile: "",
             executable: "test",
             rules: "cleancode,codesize,controversial,design,unusedcode,naming"
         };
