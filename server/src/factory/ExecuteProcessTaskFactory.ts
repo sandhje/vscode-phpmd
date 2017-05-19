@@ -10,13 +10,13 @@ class ExecuteProcessTaskFactory implements IFactory<Task<PipelinePayloadModel>> 
     ) { }
 
     public create(): Task<PipelinePayloadModel> {
-        let strategy = new ExecuteProcessStrategy(this.getExecutable(), this.getRules());
+        let strategy = new ExecuteProcessStrategy(this.getCommand(), this.getRules());
 
         return new Task<PipelinePayloadModel>(strategy);
     }
 
-    protected getExecutable(): string {
-        return this.settings.executable;
+    protected getCommand(): string {
+        return this.settings.command;
     }
 
     protected getRules(): string {

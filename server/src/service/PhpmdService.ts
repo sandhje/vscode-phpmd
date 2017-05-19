@@ -3,14 +3,14 @@ import * as Process from "child_process";
 class PhpmdService {
     private exec: (command: string) => Process.ChildProcess;
 
-    constructor(private executable) {}
+    constructor(private command) {}
 
     public getVersion(): Promise<string> {
-        return this.execute(this.executable + " --version");
+        return this.execute(this.command + " --version");
     }
 
     public run(options: string): Promise<string> {
-        return this.execute(this.executable + " " + options);
+        return this.execute(this.command + " " + options);
     }
 
     public setExecutor(exec: (command: string) => Process.ChildProcess) {
@@ -25,7 +25,7 @@ class PhpmdService {
         return this.exec;
     }
 
-    private execute(cmd): Promise<string> {
+    protected execute(cmd): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             let result: string;
             let exec = this.getExecutor();

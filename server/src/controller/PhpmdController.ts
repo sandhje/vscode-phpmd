@@ -28,9 +28,9 @@ class PhpmdController {
     ) { }
 
     public Validate(document: TextDocument | TextDocumentIdentifier) {
-        // Test version
         this.getLogger().info("PHP Mess Detector validation started for " + document.uri, true);
 
+        // Test version
         this.getService().getVersion().then((data: string) => {
             this.getLogger().info("PHP Mess Detector version check succesful (" + data + ")", true);
             let payload = this.getPipelinePayloadFactory().setUri(document.uri).create();
@@ -72,7 +72,7 @@ class PhpmdController {
 
     protected getService() {
         if (!this.service) {
-            this.service = new PhpmdService(this.settings.executable);
+            this.service = new PhpmdService(this.settings.command);
         }
 
         return this.service;

@@ -7,7 +7,7 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
     private service: PhpmdService;
 
     public constructor(
-        private executable: string,
+        private command: string,
         private rules: string
     ) { }
 
@@ -31,7 +31,7 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
 
     protected getService() {
         if (!this.service) {
-            this.service = new PhpmdService(this.executable);
+            this.service = new PhpmdService(this.command);
         }
 
         return this.service;
