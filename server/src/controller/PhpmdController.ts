@@ -31,8 +31,7 @@ class PhpmdController {
         this.getLogger().info("PHP Mess Detector validation started for " + document.uri, true);
 
         // Test version
-        this.getService().getVersion().then((data: string) => {
-            this.getLogger().info("PHP Mess Detector version check succesful (" + data + ")", true);
+        this.getService().testPhpmd().then((data: boolean) => {
             let payload = this.getPipelinePayloadFactory().setUri(document.uri).create();
 
             this.getPipeline().run(payload).then((output) => {
@@ -73,6 +72,7 @@ class PhpmdController {
     protected getService() {
         if (!this.service) {
             this.service = new PhpmdService(this.settings.command);
+            this.service.setLogger(this.getLogger());
         }
 
         return this.service;
@@ -80,7 +80,7 @@ class PhpmdController {
 
     protected getPipeline() {
         if (!this.pipeline) {
-            this.pipeline = new PipelineFactory(this.settings).create();
+            this.pipeline = new PipelineFactory(this.settings, this.getLogger()).create();
         }
 
         return this.pipeline;

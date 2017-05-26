@@ -1,16 +1,49 @@
 import * as Process from "child_process";
+import ILogger from "./logger/ILogger";
+import NullLogger from "./logger/NullLogger";
 
 class PhpmdService {
     private exec: (command: string) => Process.ChildProcess;
+    private logger: ILogger;
 
-    constructor(private command) {}
+    constructor(private command) { }
 
-    public getVersion(): Promise<string> {
-        return this.execute(this.command + " --version");
+    public testPhp(): Promise<boolean> {
+        if (this.command.toLowerCase().substr(0, 4) !== "php ") {
+            // Info skipping php test
+            return Promise.resolve(true);
+        }
+
+        return new Promise<boolean>((resolve, reject) => {
+            this.execute("php -v").then((data) => {
+                // info php version check successful
+                resolve(true);
+            }, (err: Error) => {
+                reject(err);
+            });
+        });
+    }
+
+    public testPhpmd(): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.testPhp().then(() => {
+                return this.execute(this.command + " --version");
+            }).then((data) => {
+                this.getLogger().info("PHP Mess Detector test succesful (" + data.trim() + ")", true);
+                resolve(true);
+            }, (err: Error) => {
+                reject(err);
+            });
+        });
     }
 
     public run(options: string): Promise<string> {
+        this.getLogger().info("Running phpmd command (" + this.command + " " + options + ")", true);
         return this.execute(this.command + " " + options);
+    }
+
+    public setLogger(logger: ILogger): void {
+        this.logger = logger;
     }
 
     public setExecutor(exec: (command: string) => Process.ChildProcess) {
@@ -23,6 +56,14 @@ class PhpmdService {
         }
 
         return this.exec;
+    }
+
+    protected getLogger(): ILogger {
+        if (!this.logger) {
+            this.logger = new NullLogger();
+        }
+
+        return this.logger;
     }
 
     protected execute(cmd): Promise<string> {

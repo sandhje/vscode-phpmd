@@ -19,8 +19,9 @@ class PhpmdControllerTest {
         // =======
         // Fake settings
         let settings = <IPhpmdSettingsModel> {
-            executable: "test",
-            rules: "cleancode,codesize,controversial,design,unusedcode,naming"
+            command: "test",
+            rules: "cleancode,codesize,controversial,design,unusedcode,naming",
+            verbose: true
         };
 
         // Fake document
@@ -46,12 +47,12 @@ class PhpmdControllerTest {
         diagnostic.message = "Lorem ipsum dolor";
 
         // GetVersion stub
-        let getVersionStub = sinon.stub();
-        getVersionStub.returns(Promise.resolve("Phpmd version"));
+        let testPhpmdStub = sinon.stub();
+        testPhpmdStub.returns(Promise.resolve(true));
 
         // Fake service
         let service = <PhpmdService> {};
-        service.getVersion = getVersionStub;
+        service.testPhpmd = testPhpmdStub;
 
         // Fake pipeline payload
         let payload = <PipelinePayloadModel> {};

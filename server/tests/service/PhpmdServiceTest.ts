@@ -151,11 +151,11 @@ class ServerTest {
         // Act
         let service = new PhpmdService(executable);
         service.setExecutor(executor);
-        service.getVersion().then((result) => {
+        service.testPhpmd().then((result) => {
             // Assert
             expect(executor.calledOnce).to.be.true;
             expect(executor.calledWithExactly(executable + " --version")).to.be.true;
-            expect(result).to.equal("Test data");
+            expect(result).to.equal(true);
             done();
         });
     }
