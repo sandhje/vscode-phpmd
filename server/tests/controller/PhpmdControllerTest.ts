@@ -8,6 +8,7 @@ import PipelinePayloadFactory from "../../src/factory/PipelinePayloadFactory";
 import IPhpmdSettingsModel from "../../src/model/IPhpmdSettingsModel";
 import PipelinePayloadModel from "../../src/model/PipelinePayloadModel";
 import NullLogger from "../../src/service/logger/NullLogger";
+import NullNotifier from "../../src/service/notifier/NullNotifier";
 import PhpmdService from "../../src/service/PhpmdService";
 
 @suite("PhpMD controller")
@@ -67,7 +68,6 @@ class PhpmdControllerTest {
             // Expect params to match fakes
             expect(params.uri).to.equal(document.uri);
             expect(params.diagnostics).to.equal(payload.diagnostics);
-            done(); // End test
         };
 
         // Stub pipeline payload factory
@@ -87,6 +87,115 @@ class PhpmdControllerTest {
 
         // Act
         // ===
-        controller.Validate(document);
+        controller.Validate(document).then((result) => {
+            // Assert
+            // ======
+            // Expect result to equal true
+            expect(result).to.equal(true);
+            done();
+        });
+    }
+
+    @test("Should test PHPMD command")
+    public assertTestPhpmd(done) {
+        // Arrange
+        // =======
+        // Fake settings
+        let settings = <IPhpmdSettingsModel> {
+            command: "test",
+            rules: "cleancode,codesize,controversial,design,unusedcode,naming",
+            verbose: true
+        };
+
+        // Fake document
+        let document = <TextDocumentIdentifier> {
+            uri: "test"
+        };
+
+        // GetVersion stub
+        let testPhpmdStub = sinon.stub();
+        testPhpmdStub.returns(Promise.reject(Error("Test error")));
+
+        // Fake service
+        let service = <PhpmdService> {};
+        service.testPhpmd = testPhpmdStub;
+
+        // Stub connection
+        let connection = <IConnection> {};
+
+        // Create and configure controller
+        let controller = new PhpmdController(connection, settings);
+        controller.setLogger(new NullLogger());
+        controller.setNotifier(new NullNotifier());
+        controller.setService(service);
+
+        // Act
+        // ===
+        controller.Validate(document).then(null, (err: Error) => {
+            // Assert
+            // ======
+            expect(err.message).to.equal("Test error");
+            done();
+        });
+    }
+
+    @test("Should reject on error in pipeline")
+    public assertRejectOnError(done) {
+        // Arrange
+        // =======
+        // Fake settings
+        let settings = <IPhpmdSettingsModel> {
+            command: "test",
+            rules: "cleancode,codesize,controversial,design,unusedcode,naming",
+            verbose: true
+        };
+
+        // Fake document
+        let document = <TextDocumentIdentifier> {
+            uri: "test"
+        };
+
+        // GetVersion stub
+        let testPhpmdStub = sinon.stub();
+        testPhpmdStub.returns(Promise.resolve(true));
+
+        // Fake service
+        let service = <PhpmdService> {};
+        service.testPhpmd = testPhpmdStub;
+
+        // Fake pipeline payload
+        let payload = <PipelinePayloadModel> {};
+        payload.uri = document.uri;
+
+        // Stub connection
+        let connection = <IConnection> {};
+
+        // Stub pipeline payload factory
+        let pipelinePayloadFactory = <PipelinePayloadFactory> {};
+        pipelinePayloadFactory.setUri = (uri: string) => { return pipelinePayloadFactory; };
+        pipelinePayloadFactory.create = () => { return payload; };
+
+        // Stub pipeline run
+        let runStub = sinon.stub();
+        runStub.rejects(Error("Test error"));
+
+        // Stub pipeline
+        let pipeline = new Pipeline<PipelinePayloadModel>();
+        pipeline.run = runStub;
+
+        // Create and configure controller
+        let controller = new PhpmdController(connection, settings);
+        controller.setPipeline(pipeline);
+        controller.setPipelinePayloadFactory(pipelinePayloadFactory);
+        controller.setService(service);
+
+        // Act
+        // ===
+        controller.Validate(document).then(null, (err) => {
+            // Assert
+            // ======
+            expect(err.message).to.equal("Test error");
+            done();
+        });
     }
 };

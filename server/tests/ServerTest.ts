@@ -95,6 +95,8 @@ class ServerTest {
             expect(setSettingsSpy.calledOnce).to.be.true;
             expect(documentToValidate).to.equal(document);
             done();
+
+            return Promise.resolve(true);
         };
         controller.setLogger = sinon.stub();
         controller.setNotifier = sinon.stub();
@@ -159,6 +161,8 @@ class ServerTest {
             // Assert
             expect(documentToValidate).to.equal(parameters.textDocument);
             done();
+
+            return Promise.resolve(true)
         };
 
         // Create and configure server
@@ -208,6 +212,8 @@ class ServerTest {
             // Assert
             expect(documentToValidate).to.equal(parameters.textDocument);
             done();
+
+            return Promise.resolve(true)
         };
 
         // Create and configure server

@@ -28,31 +28,37 @@ class PhpmdController {
         private settings: IPhpmdSettingsModel
     ) { }
 
-    public Validate(document: TextDocument | TextDocumentIdentifier) {
+    public Validate(document: TextDocument | TextDocumentIdentifier): Promise<boolean> {
         this.getLogger().info("PHP Mess Detector validation started for " + document.uri, true);
 
-        // Test version
-        this.getService().testPhpmd().then((data: boolean) => {
-            let payload = this.getPipelinePayloadFactory().setUri(document.uri).create();
+        return new Promise<boolean>((resolve, reject) => {
+            // Test version
+            this.getService().testPhpmd().then((data: boolean) => {
+                let payload = this.getPipelinePayloadFactory().setUri(document.uri).create();
 
-            this.getPipeline().run(payload).then((output) => {
-                let diagnostics = output.diagnostics;
+                this.getPipeline().run(payload).then((output) => {
+                    let diagnostics = output.diagnostics;
 
-                // Send the computed diagnostics to VSCode.
-                this.getLogger().info("PHP Mess Detector validation completed for " + document.uri + ". " + diagnostics.length + " problems found", true);
-                this.connection.sendDiagnostics({uri: output.uri, diagnostics});
+                    // Send the computed diagnostics to VSCode.
+                    this.getLogger().info("PHP Mess Detector validation completed for " + document.uri + ". " + diagnostics.length + " problems found", true);
+                    this.connection.sendDiagnostics({uri: output.uri, diagnostics});
+
+                    resolve(true);
+                }, (err: Error) => {
+                    this.getNotifier().error("An error occured while executing PHP Mess Detector");
+
+                    reject(err);
+                });
             }, (err: Error) => {
-                this.getNotifier().error("An error occured while executing PHP Mess Detector");
+                // Only notify client of "PHPMD test error" once per controller instance
+                if (!this.phpmdTestErrorCount) {
+                    this.getNotifier().error("Unable to execute PHPMD command (" + this.settings.command + ")");
+                }
+
+                this.phpmdTestErrorCount++;
+                reject(err);
             });
-        }, (err: Error) => {
-            // Only notify client of "PHPMD test error" once per controller instance
-            if (!this.phpmdTestErrorCount) {
-                this.getNotifier().error("Unable to execute PHPMD command (" + this.settings.command + ")");
-            }
-
-            this.phpmdTestErrorCount++;
         });
-
     }
 
     public setService(service: PhpmdService): void {
