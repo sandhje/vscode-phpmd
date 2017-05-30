@@ -21,6 +21,7 @@ class PhpmdController {
     private logger: ILogger;
     private notifier: INotifier;
     private service: PhpmdService;
+    private phpmdTestErrorCount: number = 0;
 
     constructor(
         private connection: IConnection,
@@ -44,7 +45,12 @@ class PhpmdController {
                 this.getNotifier().error("An error occured while executing PHP Mess Detector");
             });
         }, (err: Error) => {
-            this.getNotifier().error("PHP Mess Detector executable not found");
+            // Only notify client of "PHPMD test error" once per controller instance
+            if (!this.phpmdTestErrorCount) {
+                this.getNotifier().error("Unable to execute PHPMD command (" + this.settings.command + ")");
+            }
+
+            this.phpmdTestErrorCount++;
         });
 
     }
