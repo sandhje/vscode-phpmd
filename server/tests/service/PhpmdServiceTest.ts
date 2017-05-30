@@ -123,8 +123,8 @@ class ServerTest {
         });
     }
 
-    @test("Should get the version")
-    public assertGetVersion(done) {
+    @test("Should test the phpmd command")
+    public assertTestCustomCommand(done) {
         // Arrange
         // =======
         // Fake executable
@@ -155,6 +155,44 @@ class ServerTest {
             // Assert
             expect(executor.calledOnce).to.be.true;
             expect(executor.calledWithExactly(executable + " --version")).to.be.true;
+            expect(result).to.equal(true);
+            done();
+        });
+    }
+
+    @test("Should test the php command")
+    public assertTestDefaultCommand(done) {
+        // Arrange
+        // =======
+        // Fake executable
+        let executable = "php testExecutable";
+
+        // Set encoding spy
+        let setEncodingSpy = sinon.spy();
+
+        // On stub
+        let onStub = sinon.stub();
+        onStub.withArgs("data").callsArgWith(1, "Test data");
+        onStub.withArgs("close").callsArg(1);
+
+        // Fake process
+        let process = <Process.ChildProcess> {};
+        process.stdout = <stream.Readable> {};
+        process.stdout.setEncoding = setEncodingSpy;
+        process.stdout.on = onStub;
+
+        // Executor stub
+        let executor = sinon.stub();
+        executor.returns(process);
+
+        // Act
+        let service = new PhpmdService(executable);
+        service.setExecutor(executor);
+        service.testPhpmd().then((result) => {
+            // Assert
+            expect(executor.calledTwice).to.be.true;
+            expect(executor.firstCall.calledWithExactly("php -v")).to.be.true;
+            expect(executor.secondCall.calledWithExactly(executable + " --version")).to.be.true;
             expect(result).to.equal(true);
             done();
         });
