@@ -1,3 +1,4 @@
+import * as Path from "path";
 import {
     createConnection, IConnection, InitializeResult, IPCMessageReader, IPCMessageWriter,
     TextDocument, TextDocumentIdentifier, TextDocuments
@@ -165,14 +166,26 @@ class Server {
 
     protected createSettings(values: any): IPhpmdSettingsModel {
         let defaults: IPhpmdSettingsModel = {
-            executable: "",
+            command: "",
             rules: "",
-            verbose: false
+            verbose: false,
         };
 
         let settings: IPhpmdSettingsModel = Object.assign<IPhpmdSettingsModel, any>(defaults, values);
 
+        if (!settings.command) {
+            settings.command = this.getDefaultCommand();
+        }
+
         return settings;
+    }
+
+    protected getDefaultCommand(): string {
+        let serverPath = Path.dirname(process.argv[1]);
+        let phpmdPath = Path.normalize(serverPath + "/../phpmd/phpmd.phar");
+        let executable = "php " + phpmdPath;
+
+        return executable;
     }
 
     protected createController(connection: IConnection, settings: IPhpmdSettingsModel) {

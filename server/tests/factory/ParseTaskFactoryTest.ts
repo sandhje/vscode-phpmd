@@ -14,8 +14,9 @@ class ParseTaskFactoryTest {
         // =======
         // Fake settings
         let settings = <IPhpmdSettingsModel> {
-            executable: "test",
-            rules: "test"
+            command: "test",
+            rules: "test",
+            verbose: true
         };
 
         // Create and configure factory instance
