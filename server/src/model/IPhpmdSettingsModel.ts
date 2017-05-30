@@ -1,5 +1,5 @@
 interface IPhpmdSettingsModel {
-    executable: string;
+    command: string;
 
     rules: string;
 

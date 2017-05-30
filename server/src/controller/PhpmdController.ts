@@ -21,33 +21,44 @@ class PhpmdController {
     private logger: ILogger;
     private notifier: INotifier;
     private service: PhpmdService;
+    private phpmdTestErrorCount: number = 0;
 
     constructor(
         private connection: IConnection,
         private settings: IPhpmdSettingsModel
     ) { }
 
-    public Validate(document: TextDocument | TextDocumentIdentifier) {
-        // Test version
+    public Validate(document: TextDocument | TextDocumentIdentifier): Promise<boolean> {
         this.getLogger().info("PHP Mess Detector validation started for " + document.uri, true);
 
-        this.getService().getVersion().then((data: string) => {
-            this.getLogger().info("PHP Mess Detector version check succesful (" + data + ")", true);
-            let payload = this.getPipelinePayloadFactory().setUri(document.uri).create();
+        return new Promise<boolean>((resolve, reject) => {
+            // Test version
+            this.getService().testPhpmd().then((data: boolean) => {
+                let payload = this.getPipelinePayloadFactory().setUri(document.uri).create();
 
-            this.getPipeline().run(payload).then((output) => {
-                let diagnostics = output.diagnostics;
+                this.getPipeline().run(payload).then((output) => {
+                    let diagnostics = output.diagnostics;
 
-                // Send the computed diagnostics to VSCode.
-                this.getLogger().info("PHP Mess Detector validation completed for " + document.uri + ". " + diagnostics.length + " problems found", true);
-                this.connection.sendDiagnostics({uri: output.uri, diagnostics});
+                    // Send the computed diagnostics to VSCode.
+                    this.getLogger().info("PHP Mess Detector validation completed for " + document.uri + ". " + diagnostics.length + " problems found", true);
+                    this.connection.sendDiagnostics({uri: output.uri, diagnostics});
+
+                    resolve(true);
+                }, (err: Error) => {
+                    this.getNotifier().error("An error occured while executing PHP Mess Detector");
+
+                    reject(err);
+                });
             }, (err: Error) => {
-                this.getNotifier().error("An error occured while executing PHP Mess Detector");
-            });
-        }, (err: Error) => {
-            this.getNotifier().error("PHP Mess Detector executable not found");
-        });
+                // Only notify client of "PHPMD test error" once per controller instance
+                if (!this.phpmdTestErrorCount) {
+                    this.getNotifier().error("Unable to execute PHPMD command (" + this.settings.command + ")");
+                }
 
+                this.phpmdTestErrorCount++;
+                reject(err);
+            });
+        });
     }
 
     public setService(service: PhpmdService): void {
@@ -72,7 +83,8 @@ class PhpmdController {
 
     protected getService() {
         if (!this.service) {
-            this.service = new PhpmdService(this.settings.executable);
+            this.service = new PhpmdService(this.settings.command);
+            this.service.setLogger(this.getLogger());
         }
 
         return this.service;
@@ -80,7 +92,7 @@ class PhpmdController {
 
     protected getPipeline() {
         if (!this.pipeline) {
-            this.pipeline = new PipelineFactory(this.settings).create();
+            this.pipeline = new PipelineFactory(this.settings, this.getLogger()).create();
         }
 
         return this.pipeline;
