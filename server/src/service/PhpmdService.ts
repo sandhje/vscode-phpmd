@@ -45,13 +45,13 @@ class PhpmdService {
      */
     public testPhp(): Promise<boolean> {
         if (this.command.toLowerCase().substr(0, 4) !== "php ") {
-            // TODO: Info skipping php test
+            this.getLogger().info("PHP mess detector command not using global PHP, skipping PHP test", true);
             return Promise.resolve(true);
         }
 
         return new Promise<boolean>((resolve, reject) => {
             this.execute("php -v").then((data) => {
-                // TODO: info php version check successful
+                this.getLogger().info("PHP command test successful (" + data.substr(0, 16).trim() + " ...)", true);
                 resolve(true);
             }, (err: Error) => {
                 reject(err);
