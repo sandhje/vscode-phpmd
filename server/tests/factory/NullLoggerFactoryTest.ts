@@ -1,6 +1,7 @@
 import { assert, expect } from "chai";
 import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
 import * as sinon from "sinon";
+import { IConnection } from "vscode-languageserver";
 import NullLoggerFactory from "../../src/factory/NullLoggerFactory";
 import NullLogger from "../../src/service/logger/NullLogger";
 
@@ -12,7 +13,7 @@ class NullLoggerFactoryTest {
         // Arrange
         // =======
         // Fake connection
-        let connection = {};
+        let connection = <IConnection> {};
 
         // Create factory instance and configure
         let factory = new NullLoggerFactory();
