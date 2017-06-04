@@ -2,6 +2,8 @@ import { IExecuteStrategy } from "@open-sourcerers/j-stillery";
 import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
 import PipelinePayloadModel from "../../model/PipelinePayloadModel";
 import { IPmd, IPmdViolation } from "../../model/pmd";
+import ILogger from "../logger/ILogger";
+import NullLogger from "../logger/NullLogger";
 
 /**
  * Build diagnostic pipeline task strategy
@@ -36,6 +38,15 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
         DiagnosticSeverity.Hint,
         DiagnosticSeverity.Hint
     ];
+
+    /**
+     * Build diagnostics task strategy constructor
+     *
+     * @param {ILogger} logger Logger, defaults to Null object implementation
+     */
+    public constructor(
+        private logger: ILogger = new NullLogger()
+    ) { }
 
     /**
      * Strategy executor
@@ -96,7 +107,7 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
                     diagnostics.push(diagnostic);
                 }
             } catch (e) {
-                // TODO: Log get diagnostic error
+                this.logger.error("Error while parsing diagnostic info from PHP mess detector violation.");
             }
         });
 
