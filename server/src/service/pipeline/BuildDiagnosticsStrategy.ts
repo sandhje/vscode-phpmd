@@ -3,10 +3,32 @@ import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
 import PipelinePayloadModel from "../../model/PipelinePayloadModel";
 import { IPmd, IPmdViolation } from "../../model/pmd";
 
+/**
+ * Build diagnostic pipeline task strategy
+ *
+ * Strategy used to create the pipeline task responsible for building
+ * the diagnostic object from the parsed PHP mess detector result.
+ *
+ * @module vscode-phpmd/service/pipeline
+ * @author Sandhjé Bouw (sandhje@ecodes.io)
+ */
 class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel> {
+    /**
+     * List of reported PHP mess detector violations
+     *
+     * Used to prevent reporting the same violation multiple times.
+     *
+     * @property {string[]} reported
+     */
     protected reported: string[] = [];
 
-    // TODO: construct form options
+    /**
+     * Map of diagnostic severity levels to PHP mess detector severity levels
+     *
+     * List indexes are used as the identifiers of the PHP mess detector sevetity level
+     *
+     * @property {DiagnosticSeverity[]} severityMap
+     */
     protected severityMap: DiagnosticSeverity[] = [
         DiagnosticSeverity.Error,
         DiagnosticSeverity.Warning,
@@ -15,6 +37,13 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
         DiagnosticSeverity.Hint
     ];
 
+    /**
+     * Strategy executor
+     *
+     * Resolve with a list of diagnostics from parsed PHP mess detector violations.
+     *
+     * @see IExecuteStrategy::execute
+     */
     public execute(
         input: PipelinePayloadModel,
         resolve: (output?: PipelinePayloadModel | PromiseLike<PipelinePayloadModel>) => void,
@@ -39,10 +68,23 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
         resolve(input);
     };
 
+    /**
+     * Get a list of violations from the parsed PHP mess detector result
+     *
+     * @param {IPmd} pmd
+     * @returns {IPmdViolation[]}
+     */
     protected getProblems(pmd: IPmd): IPmdViolation[] {
         return pmd.file[0].violation || [];
     }
 
+    /**
+     * Create a list of diagnostics from a list of PHP mess detector violations
+     *
+     * @param {string} filename
+     * @param {IPmdViolation[]} problems
+     * @returns {Diagnostic[]}
+     */
     protected getDiagnosticts(filename: string, problems: IPmdViolation[]): Diagnostic[] {
         let diagnostics: Diagnostic[] = [];
 
@@ -61,7 +103,15 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
         return diagnostics;
     }
 
-    protected getDiagnostic(problem: any): Diagnostic {
+    /**
+     * Create a diagnostic object from a PHP mess detector violation
+     *
+     * @throws {Error} If vscode diagnostic object could not be created from PHP mess detector violation
+     *
+     * @param {IPmdViolation} problem
+     * @returns {Diagnostic}
+     */
+    protected getDiagnostic(problem: IPmdViolation): Diagnostic {
         try {
             let line = this.getLine(problem);
             let index = this.getIndex(problem);
@@ -93,15 +143,33 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
         }
     }
 
+    /**
+     * Add a PHP mess detector violation hash to the reported list to prevent duplicate diagnostics
+     *
+     * @param {string} hash
+     * @returns {void}
+     */
     protected report(hash: string): void {
         this.reported.push(hash);
     }
 
+    /**
+     * Check wether the passed violation hash was already reported
+     *
+     * @param {string} hash
+     * @returns {boolean}
+     */
     protected alreadyReported(hash: string): boolean {
         return this.reported.indexOf(hash) >= 0;
     }
 
-    protected createProblemHash(problem: any): string {
+    /**
+     * Create a problem hash from a PHP mess detector violation
+     *
+     * @param {IPmdViolation} problem
+     * @returns {string}
+     */
+    protected createProblemHash(problem: IPmdViolation): string {
         let ruleset = problem.$.ruleset || null;
         let rule = problem.$.rule || null;
         let line = problem.$.beginline || null;
@@ -122,7 +190,15 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
         return hash.toString();
     }
 
-    protected getLine(problem: any): number {
+    /**
+     * Get the violation line number from a PHP mess detector violation
+     *
+     * @throws {Error} If line number could not be extracted from violation
+     *
+     * @param {IPmdViolation} problem
+     * @return {number}
+     */
+    protected getLine(problem: IPmdViolation): number {
         let beginline = problem.$.beginline || null;
 
         if (beginline === null) {
@@ -132,15 +208,39 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
         return parseInt(beginline, 10) - 1;
     }
 
-    protected getIndex(problem: any): number {
+    /**
+     * Get the violation start index from a PHP mess detector violation
+     *
+     * Returns a fixed value of 0 since PHP mess detector violations do not contain a start index.
+     *
+     * @param {IPmdViolation} problem
+     * @return {number}
+     */
+    protected getIndex(problem: IPmdViolation): number {
         return 0;
     }
 
-    protected getLength(problem: any): number {
+    /**
+     * Get the violation length from a PHP mess detector violation
+     *
+     * Returns a fixed value of Number.MAX_VALUE since PHP mess detector violations do not contain a length.
+     *
+     * @param {IPmdViolation} problem
+     * @return {number}
+     */
+    protected getLength(problem: IPmdViolation): number {
         return Number.MAX_VALUE;
     }
 
-    protected getMessage(problem: any): string {
+    /**
+     * Get the violation message from a PHP mess detector violation
+     *
+     * @throws {Error} If message could not be extracted from violation
+     *
+     * @param {IPmdViolation} problem
+     * @return {string}
+     */
+    protected getMessage(problem: IPmdViolation): string {
         let message = problem._ || null;
 
         if (message === null) {
@@ -150,10 +250,27 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
         return message;
     }
 
-    protected getSource(problem: any): string {
+    /**
+     * Get the source from a PHP mess detector violation
+     *
+     * Returns a fixed value of "PHP Mess Detector" since PHP mess detector violations do not contain a source.
+     *
+     * @param {IPmdViolation} problem
+     * @return {number}
+     */
+    protected getSource(problem: IPmdViolation): string {
         return "PHP Mess Detector";
     }
 
+    /**
+     * Get the violation severity from a PHP mess detector violation
+     *
+     * Maps PHP mess detector severities to vscode diagnostic severities using the severityMap property. If no
+     * mapping was possible defaults to a severity of "Hint".
+     *
+     * @param {IPmdViolation} problem
+     * @return {DiagnosticSeverity}
+     */
     protected getSeverity(problem: any): DiagnosticSeverity {
         let priority: number = parseInt(problem.$.priority, 10) || 100;
 
