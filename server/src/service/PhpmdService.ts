@@ -51,7 +51,7 @@ class PhpmdService {
 
         return new Promise<boolean>((resolve, reject) => {
             this.execute("php -v").then((data) => {
-                this.getLogger().info("PHP command test successful (" + data.trim() + ")", true);
+                this.getLogger().info("PHP command test successful (" + data.substr(0, 16).trim() + " ...)", true);
                 resolve(true);
             }, (err: Error) => {
                 reject(err);
