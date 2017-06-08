@@ -1,9 +1,10 @@
 {
   "name": "vscode-phpmd",
+  "displayName": "PHP Mess Detector",
   "description": "VSCode plugin for PHP Mess Detector",
-  "author": "Sandhjé Bouw",
+  "author": "Ecodes.io",
   "license": "MIT",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "publisher": "ecodes",
   "engines": {
     "vscode": "^1.8.0"
@@ -14,6 +15,22 @@
   "activationEvents": [
     "onLanguage:php"
   ],
+  "keywords": [
+    "php",
+    "phpmd",
+    "mess detector",
+    "diagnostics",
+    "linter"
+  ],
+  "bugs": {
+    "url": "https://github.com/sandhje/vscode-phpmd/issues"
+  },
+  "homepage": "https://github.com/sandhje/vscode-phpmd",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sandhje/vscode-phpmd.git"
+  },
+  "icon": "images/vscode-phpmd.svg",
   "main": "./out/client",
   "contributes": {
     "configuration": {
