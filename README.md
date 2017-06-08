@@ -18,6 +18,10 @@ Before contributing also make sure you are familiar with VSCode's [language serv
 
 Install all dependencies with [yarn](https://yarnpkg.com/lang/en/)
 
+## History
+
+See client/CHANGELOG.md
+
 ## Acknowledgements
 
 * The Microsoft VSCode team for [VSCode](https://code.visualstudio.com/) and [vscode-languageserver-node](https://github.com/Microsoft/vscode-languageserver-node).
