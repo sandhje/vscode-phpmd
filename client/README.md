@@ -74,5 +74,3 @@ To enable verbose logging:
 * Turn on verbose logging through settings and check output
 * Ask a question on [gitter](https://gitter.im/sandhje/vscode-phpmd)
 * Found a bug? [file an issue](https://github.com/sandhje/vscode-phpmd/issues) (include the logs)
-
-## Contributing
