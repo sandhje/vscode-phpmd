@@ -223,7 +223,14 @@ class Server {
             // (Re)Validate any open text documents
             documentsManager.all().forEach((document: TextDocument) => {
                 this.getLogger().info("Validating document " + document.uri, true);
-                this.getController().Validate(document);
+                this.getController().validate(document).then((result: boolean) => {
+                    this.getLogger().info("Document validation after config change completed successfully");
+                }, (err: Error) => {
+                    this.getLogger().error(
+                        "An error occured during document validation after config change with the following message: "
+                        + err.message
+                    );
+                });
             });
         });
 
@@ -233,7 +240,13 @@ class Server {
 
             let document: TextDocumentIdentifier = parameters.textDocument;
 
-            this.getController().Validate(document);
+            this.getController().validate(document).then((result: boolean) => {
+                this.getLogger().info("Document validation after open completed successfully");
+            }, (err: Error) => {
+                this.getLogger().error(
+                    "An error occured during document validation after open with the following message: " + err.message
+                );
+            });
         });
 
         // A php document was saved
@@ -242,7 +255,13 @@ class Server {
 
             let document: TextDocumentIdentifier = parameters.textDocument;
 
-            this.getController().Validate(document);
+            this.getController().validate(document).then((result: boolean) => {
+                this.getLogger().info("Document validation after save completed successfully");
+            }, (err: Error) => {
+                this.getLogger().error(
+                    "An error occured during document validation after save with the following message: " + err.message
+                );
+            });
         });
 
         // Set connection capabilities

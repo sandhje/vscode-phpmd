@@ -91,7 +91,7 @@ class PhpmdController {
      * @param {TextDocument|TextDocumentIdentifier} document
      * @returns {Promise<boolean>} Resolves with true on success, rejects with error on failure
      */
-    public Validate(document: TextDocument | TextDocumentIdentifier): Promise<boolean> {
+    public validate(document: TextDocument | TextDocumentIdentifier): Promise<boolean> {
         this.getLogger().info("PHP Mess Detector validation started for " + document.uri, true);
 
         return new Promise<boolean>((resolve, reject) => {

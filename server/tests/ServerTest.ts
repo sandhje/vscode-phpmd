@@ -89,7 +89,7 @@ class ServerTest {
 
         // Fake controller
         let controller = <PhpmdController> {};
-        controller.Validate = (documentToValidate) => {
+        controller.validate = (documentToValidate) => {
             // Assert
             expect(setConnectionSpy.calledOnce && setConnectionSpy.calledWith(connection)).to.be.true;
             expect(setSettingsSpy.calledOnce).to.be.true;
@@ -157,7 +157,7 @@ class ServerTest {
 
         // Fake controller
         let controller = <PhpmdController> {};
-        controller.Validate = (documentToValidate) => {
+        controller.validate = (documentToValidate) => {
             // Assert
             expect(documentToValidate).to.equal(parameters.textDocument);
             done();
@@ -208,12 +208,12 @@ class ServerTest {
 
         // Fake controller
         let controller = <PhpmdController> {};
-        controller.Validate = (documentToValidate) => {
+        controller.validate = (documentToValidate) => {
             // Assert
             expect(documentToValidate).to.equal(parameters.textDocument);
             done();
 
-            return Promise.resolve(true)
+            return Promise.resolve(true);
         };
 
         // Create and configure server
