@@ -87,7 +87,7 @@ class PhpmdControllerTest {
 
         // Act
         // ===
-        controller.Validate(document).then((result) => {
+        controller.validate(document).then((result) => {
             // Assert
             // ======
             // Expect result to equal true
@@ -131,7 +131,7 @@ class PhpmdControllerTest {
 
         // Act
         // ===
-        controller.Validate(document).then(null, (err: Error) => {
+        controller.validate(document).then(null, (err: Error) => {
             // Assert
             // ======
             expect(err.message).to.equal("Test error");
@@ -191,7 +191,7 @@ class PhpmdControllerTest {
 
         // Act
         // ===
-        controller.Validate(document).then(null, (err) => {
+        controller.validate(document).then(null, (err) => {
             // Assert
             // ======
             expect(err.message).to.equal("Test error");
