@@ -461,4 +461,51 @@ class ServerTest {
         // Act
         server.main();
     }
+
+    @test("Should throw error if controller not initialized on get")
+    public assertErrorOnControllerNotInitialized(done) {
+        // Arrange
+        // =======
+        // Fake parameters
+        let parameters = <any> {
+            textDocument: <TextDocumentIdentifier> {}
+        };
+
+        // Stub connection.onDidSaveTextDocument
+        let onDidSaveTextDocumentStub = sinon.stub();
+        onDidSaveTextDocumentStub.callsArgWith(0, parameters);
+
+        // Fake documentsManager
+        let document = <TextDocument> {};
+        let documentsManager = <TextDocuments> {};
+        documentsManager.all = () => {
+            return <TextDocument[]> [document];
+        };
+
+        // DocumentsManager listen spy
+        let dmListenSpy = sinon.spy();
+        documentsManager.listen = dmListenSpy;
+
+        // Fake connection
+        let connection = <IConnection> {};
+        connection.onDidChangeConfiguration = () => { /* Fake */ };
+        connection.onDidOpenTextDocument = () => { /* Fake */ };
+        connection.onDidSaveTextDocument = onDidSaveTextDocumentStub;
+        connection.onInitialize = () => { /* Fake */ };
+        connection.listen = () => { /* Fake */ };
+
+        // Create and configure server
+        let server = new Server();
+        server.setDocumentsManager(documentsManager);
+        server.setConnection(connection);
+        server.setLoggerFactory(new NullLoggerFactory());
+
+        // Act
+        try {
+            server.main();
+        } catch (e) {
+            expect(e.message).to.equal("Controller not initialized. Aborting.");
+            done();
+        }
+    }
 }
