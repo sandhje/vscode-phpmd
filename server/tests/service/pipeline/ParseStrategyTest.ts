@@ -6,7 +6,7 @@ import PipelinePayloadModel from "../../../src/model/PipelinePayloadModel";
 import ParseStrategy from "../../../src/service/pipeline/ParseStrategy";
 
 @suite("Parse strategy")
-class BuildDiagnosticsStrategyTest {
+class ParseStrategyTest {
 
     @test("Should resolve with a parsed XML")
     public assertResolveParse(done) {
