@@ -7,7 +7,7 @@ import BuildDiagnosticsTaskFactory from "./BuildDiagnosticsTaskFactory";
 import ExecuteProcessTaskFactory from "./ExecuteProcessTaskFactory";
 import IFactory from "./IFactory";
 import ParseTaskFactory from "./ParseTaskFactory";
-import TestFileStrategyFactory from "./TestFileStrategyFactory";
+import TestFileTaskFactory from "./TestFileTaskFactory";
 
 /**
  * PHP mess detector validation pipeline factory
@@ -38,7 +38,7 @@ class PipelineFactory implements IFactory<Pipeline<PipelinePayloadModel>> {
      */
     public create(): Pipeline<PipelinePayloadModel> {
         let pipeline = new Pipeline<PipelinePayloadModel>()
-            .pipe(new TestFileStrategyFactory(this.settings, this.logger).create())
+            .pipe(new TestFileTaskFactory(this.settings, this.logger).create())
             .pipe(new ExecuteProcessTaskFactory(this.settings, this.logger).create())
             .pipe(new ParseTaskFactory(this.settings).create())
             .pipe(new BuildDiagnosticsTaskFactory(this.settings, this.logger).create());

@@ -13,7 +13,7 @@ import IFactory from "./IFactory";
  * @module vscode-phpmd/server/factory
  * @author Sandhjé Bouw (sandhje@ecodes.io)
  */
-class TestFileStrategyFactory implements IFactory<Task<PipelinePayloadModel>> {
+class TestFileTaskFactory implements IFactory<Task<PipelinePayloadModel>> {
     /**
      * Test file factory constructor
      *
@@ -38,4 +38,4 @@ class TestFileStrategyFactory implements IFactory<Task<PipelinePayloadModel>> {
     }
 }
 
-export default TestFileStrategyFactory;
+export default TestFileTaskFactory;
