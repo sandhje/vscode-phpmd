@@ -1,3 +1,8 @@
+# Version 1.0.1
+
+* Fix issue #12
+* Fix issue #14
+
 # Version 1.0.0
 
 * Added jsdoc comments to all "things"
