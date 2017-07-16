@@ -1,5 +1,6 @@
 import { IExecuteStrategy } from "@open-sourcerers/j-stillery";
 import * as Process from "child_process";
+import PipelineErrorModel from "../../model/PipelineErrorModel";
 import PipelinePayloadModel from "../../model/PipelinePayloadModel";
 import ILogger from "../logger/ILogger";
 import NullLogger from "../logger/NullLogger";
@@ -52,7 +53,7 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
 
             resolve(input);
         }, (err: Error) => {
-            reject(err);
+            reject(new PipelineErrorModel(err, false));
         });
     };
 
