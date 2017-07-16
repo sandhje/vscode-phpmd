@@ -71,7 +71,7 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
         // For all files in Pmd result
         // Get diagnostics and append to payload
         pmd.file.every((file) => {
-            input.diagnostics = input.diagnostics.concat(this.getDiagnosticts(file.$.name, this.getProblems(pmd)));
+            input.diagnostics = input.diagnostics.concat(this.getDiagnostics(file.$.name, this.getProblems(pmd)));
 
             return true;
         });
@@ -96,8 +96,10 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
      * @param {IPmdViolation[]} problems
      * @returns {Diagnostic[]}
      */
-    protected getDiagnosticts(filename: string, problems: IPmdViolation[]): Diagnostic[] {
+    protected getDiagnostics(filename: string, problems: IPmdViolation[]): Diagnostic[] {
         let diagnostics: Diagnostic[] = [];
+
+        this.clearReported(); // Clear the already reported diagnostics to prevent false positives upon de-duplication
 
         problems.forEach((problem) => {
             try {
@@ -172,6 +174,15 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
      */
     protected alreadyReported(hash: string): boolean {
         return this.reported.indexOf(hash) >= 0;
+    }
+
+    /**
+     * Clear the already reported problems
+     *
+     * @returns {void}
+     */
+    protected clearReported(): void {
+        this.reported = [];
     }
 
     /**
