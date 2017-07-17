@@ -6,6 +6,7 @@ import { Diagnostic, IConnection, Position, Range, TextDocumentIdentifier } from
 import PhpmdController from "../../src/controller/PhpmdController";
 import PipelinePayloadFactory from "../../src/factory/PipelinePayloadFactory";
 import IPhpmdSettingsModel from "../../src/model/IPhpmdSettingsModel";
+import PipelineErrorModel from "../../src/model/PipelineErrorModel";
 import PipelinePayloadModel from "../../src/model/PipelinePayloadModel";
 import NullLogger from "../../src/service/logger/NullLogger";
 import NullNotifier from "../../src/service/notifier/NullNotifier";
@@ -87,7 +88,7 @@ class PhpmdControllerTest {
 
         // Act
         // ===
-        controller.Validate(document).then((result) => {
+        controller.validate(document).then((result) => {
             // Assert
             // ======
             // Expect result to equal true
@@ -131,7 +132,7 @@ class PhpmdControllerTest {
 
         // Act
         // ===
-        controller.Validate(document).then(null, (err: Error) => {
+        controller.validate(document).then(null, (err: Error) => {
             // Assert
             // ======
             expect(err.message).to.equal("Test error");
@@ -177,7 +178,7 @@ class PhpmdControllerTest {
 
         // Stub pipeline run
         let runStub = sinon.stub();
-        runStub.rejects(Error("Test error"));
+        runStub.rejects(new PipelineErrorModel("Test error"));
 
         // Stub pipeline
         let pipeline = new Pipeline<PipelinePayloadModel>();
@@ -191,10 +192,10 @@ class PhpmdControllerTest {
 
         // Act
         // ===
-        controller.Validate(document).then(null, (err) => {
+        controller.validate(document).then(null, (err: PipelineErrorModel) => {
             // Assert
             // ======
-            expect(err.message).to.equal("Test error");
+            expect(err).to.equal("Test error");
             done();
         });
     }

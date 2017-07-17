@@ -8,6 +8,7 @@ import {
 import PipelineFactory from "../factory/PipelineFactory";
 import PipelinePayloadFactory from "../factory/PipelinePayloadFactory";
 import IPhpmdSettingsModel from "../model/IPhpmdSettingsModel";
+import PipelineErrorModel from "../model/PipelineErrorModel";
 import PipelinePayloadModel from "../model/PipelinePayloadModel";
 import ILogger from "../service/logger/ILogger";
 import NullLogger from "../service/logger/NullLogger";
@@ -91,7 +92,7 @@ class PhpmdController {
      * @param {TextDocument|TextDocumentIdentifier} document
      * @returns {Promise<boolean>} Resolves with true on success, rejects with error on failure
      */
-    public Validate(document: TextDocument | TextDocumentIdentifier): Promise<boolean> {
+    public validate(document: TextDocument | TextDocumentIdentifier): Promise<boolean> {
         this.getLogger().info("PHP Mess Detector validation started for " + document.uri, true);
 
         return new Promise<boolean>((resolve, reject) => {
@@ -103,14 +104,29 @@ class PhpmdController {
                     let diagnostics = output.diagnostics;
 
                     // Send the computed diagnostics to VSCode.
-                    this.getLogger().info("PHP Mess Detector validation completed for " + document.uri + ". " + diagnostics.length + " problems found", true);
+                    this.getLogger().info(
+                        "PHP Mess Detector validation completed for " + document.uri
+                            + ". " + diagnostics.length + " problems found",
+                        true
+                    );
                     this.connection.sendDiagnostics({uri: output.uri, diagnostics});
 
+                    // Resolve the validate promise
                     resolve(true);
-                }, (err: Error) => {
-                    this.getNotifier().error("An error occured while executing PHP Mess Detector");
+                }, (err: any) => {
+                    // Don't notify the user of the error if silent is defined on the error and is truthy
+                    if (!err.silent) {
+                        this.getNotifier().error("An error occured while executing PHP Mess Detector");
+                    }
 
-                    reject(err);
+                    // If an error property is defined on the error reject the validate promise with that
+                    // value instead, this is the case for PipelineErrorModel instances
+                    if (err.error) {
+                        return reject(err.error);
+                    }
+
+                    // Reject the validate promise
+                    return reject(err);
                 });
             }, (err: Error) => {
                 // Only notify client of "PHPMD test error" once per controller instance
@@ -119,6 +135,8 @@ class PhpmdController {
                 }
 
                 this.phpmdTestErrorCount++;
+
+                // Reject the validate promise
                 reject(err);
             });
         });

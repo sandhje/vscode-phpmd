@@ -24,4 +24,5 @@ See client/CHANGELOG.md
 
 ## Acknowledgements
 
+* The people behind [PHPMD](https://phpmd.org/people-behind.html)
 * The Microsoft VSCode team for [VSCode](https://code.visualstudio.com/) and [vscode-languageserver-node](https://github.com/Microsoft/vscode-languageserver-node).
