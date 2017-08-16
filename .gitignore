@@ -1,5 +1,3 @@
 out
 node_modules
 client/server
-.nyc_output/
-coverage/
