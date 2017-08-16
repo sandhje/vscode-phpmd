@@ -10,10 +10,7 @@ before_install:
 cache:
   directories:
   - $HOME/.yarn-cache
-env:
-- TEST_DIR=server
 script:
-- cd $TEST_DIR
 - yarn install
 - npm test
 - npm run report-coverage
