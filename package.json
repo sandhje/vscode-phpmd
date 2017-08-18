@@ -1,0 +1,109 @@
+{
+  "name": "vscode-phpmd",
+  "displayName": "PHP Mess Detector",
+  "description": "VSCode plugin for PHP Mess Detector",
+  "author": "Ecodes.io",
+  "license": "MIT",
+  "version": "1.0.1",
+  "publisher": "ecodes",
+  "engines": {
+    "vscode": "^1.8.0"
+  },
+  "categories": [
+    "Linters"
+  ],
+  "activationEvents": [
+    "onLanguage:php"
+  ],
+  "keywords": [
+    "php",
+    "phpmd",
+    "mess detector",
+    "diagnostics",
+    "linter"
+  ],
+  "bugs": {
+    "url": "https://github.com/sandhje/vscode-phpmd/issues"
+  },
+  "homepage": "https://github.com/sandhje/vscode-phpmd",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sandhje/vscode-phpmd.git"
+  },
+  "icon": "images/vscode-phpmd.png",
+  "main": "./out/client/client",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "PHP Mess Detector configuration",
+      "properties": {
+        "phpmd.command": {
+          "type": "string",
+          "default": "",
+          "description": "The phpmd command. Leave empty to use the shipped phpmd phar (local php executable is required)"
+        },
+        "phpmd.rules": {
+          "type": "string",
+          "default": "cleancode,codesize,controversial,design,unusedcode,naming",
+          "description": "Phpmd ruleset (comma separated list of rulesets or the location of a config file)"
+        },
+        "phpmd.verbose": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable verbose logging"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "update-vscode": "node ./node_modules/vscode/bin/install",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "nyc mocha --opts mocha.opts",
+    "report-coverage": "nyc report --reporter=json",
+    "compile": "tsc -p .",
+    "watch": "tsc --watch -p ."
+  },
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.37",
+    "@types/node": "^6.0.52",
+    "@types/sinon": "^2.1.2",
+    "@types/xml2js": "^0.0.32",
+    "chai": "^3.5.0",
+    "codecov.io": "^0.1.6",
+    "mocha": "^3.2.0",
+    "mocha-typescript": "^1.0.15",
+    "nyc": "^10.2.0",
+    "sinon": "^2.1.0",
+    "source-map-support": "^0.4.14",
+    "ts-node": "2.0.0",
+    "tslint": "^4.5.1",
+    "typescript": "2.1.5"
+  },
+  "dependencies": {
+    "@open-sourcerers/j-stillery": "^0.2.0",
+    "vscode": "^1.0.3",
+    "vscode-languageclient": "^2.6.3",
+    "vscode-languageserver": "^3.0.0",
+    "vscode-uri": "^1.0.0",
+    "xml2js": "^0.4.17"
+  },
+  "nyc": {
+    "include": [
+      "server/*.ts",
+      "server/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  }
+}
