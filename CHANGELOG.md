@@ -1,3 +1,8 @@
+# Version 1.0.2
+
+* Fix issue #18
+* Fix issue #19
+
 # Version 1.0.1
 
 * Fix issue #12
