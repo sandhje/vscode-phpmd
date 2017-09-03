@@ -77,7 +77,7 @@ class PhpmdService {
             }, (err: Error) => {
                 reject(err);
             });
-        });
+        }); 
     }
 
     /**

@@ -18,6 +18,7 @@ class ExecuteProcessStrategyTest {
         let resolve = (output: PipelinePayloadModel) => {
             // Assert
             // ======
+            expect(runStub.calledWithExactly("\"testUri\" xml \"testRules\"")).to.be.true;
             expect(runStub.calledOnce).to.be.true;
             expect(output.raw).to.equal("Test data");
             done();
@@ -35,12 +36,10 @@ class ExecuteProcessStrategyTest {
         let rules = "testRules";
 
         // Fake input
-        let input = <PipelinePayloadModel> {};
-        input.uri = "/test/uri";
+        let input = new PipelinePayloadModel("testUri");
 
         // Run stub
         let runStub = sinon.stub();
-        runStub.calledWithExactly("testExecutable /test/uri testRules");
         runStub.returns(Promise.resolve("Test data"));
 
         // Fake service
@@ -68,6 +67,7 @@ class ExecuteProcessStrategyTest {
         let reject = (reason: PipelineErrorModel) => {
             // Assert
             // ======
+            expect(runStub.calledWithExactly("\"testUri\" xml \"testRules\"")).to.be.true;
             expect(reason.error.message).to.equal("Test error");
             expect(reason.silent).to.be.false;
             done();
@@ -80,12 +80,10 @@ class ExecuteProcessStrategyTest {
         let rules = "testRules";
 
         // Fake input
-        let input = <PipelinePayloadModel> {};
-        input.uri = "/test/uri";
+        let input = new PipelinePayloadModel("testUri");
 
         // Run stub
         let runStub = sinon.stub();
-        runStub.calledWithExactly("testExecutable /test/uri testRules");
         runStub.returns(Promise.reject(Error("Test error")));
 
         // Fake service
