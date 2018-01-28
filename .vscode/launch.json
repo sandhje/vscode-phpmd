@@ -27,7 +27,20 @@
 			"outFiles": [
 				"${workspaceRoot}/out/server/**/*.js"
 			]
-		}
+		},
+		{
+            "type": "node",
+            "request": "launch",
+            "name": "Launch unit tests",
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run-script", "test"
+			],
+			"stopOnEntry": true,
+			"sourceMaps": true,
+			"port": 9228
+        }
 	],
 	"compounds": [
 		{

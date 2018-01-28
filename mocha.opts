@@ -2,5 +2,6 @@
 --require source-map-support/register
 --full-trace
 --bail
---debug
+--inspect=9228
+--colors
 tests/**/*.ts
