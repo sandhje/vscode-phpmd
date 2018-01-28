@@ -12,6 +12,7 @@
 			"args": [
 				"--extensionDevelopmentPath=${workspaceRoot}"
 			],
+			"preLaunchTask": "build",
 			"stopOnEntry": false,
 			"sourceMaps": true,
 			"outFiles": [
@@ -26,20 +27,20 @@
 			"sourceMaps": true,
 			"outFiles": [
 				"${workspaceRoot}/out/server/**/*.js"
-			]
+			],
+			"timeout": 50000 // Allow for build task to finish
 		},
 		{
             "type": "node",
             "request": "launch",
             "name": "Launch unit tests",
             "cwd": "${workspaceRoot}",
-            "runtimeExecutable": "npm",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/mocha",
             "runtimeArgs": [
-                "run-script", "test"
+                "--opts", "mocha.opts"
 			],
 			"stopOnEntry": true,
-			"sourceMaps": true,
-			"port": 9228
+			"sourceMaps": true
         }
 	],
 	"compounds": [

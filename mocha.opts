@@ -2,6 +2,6 @@
 --require source-map-support/register
 --full-trace
 --bail
---inspect=9228
+--inspect
 --colors
 tests/**/*.ts
