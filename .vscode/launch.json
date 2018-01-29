@@ -39,7 +39,7 @@
             "runtimeArgs": [
                 "--opts", "mocha.opts"
 			],
-			"stopOnEntry": true,
+			"stopOnEntry": false,
 			"sourceMaps": true
         }
 	],

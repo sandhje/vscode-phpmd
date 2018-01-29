@@ -97,4 +97,46 @@ class ExecuteProcessStrategyTest {
         // Act
         strategy.execute(input, resolve, reject);
     }
+
+    @test("Should left trim the xml result")
+    public assertLtrimXML(done) {
+        // Arrange
+        // =======
+        // Fake resolve callback
+        let resolve = (output: PipelinePayloadModel) => {
+            // Assert
+            // ======
+            expect(output.raw).to.equal("<?xml><root>Test data</root>");
+            done();
+        };
+
+        // Fake reject callback
+        let reject = (reason: any) => {
+            // Nothing to do here, test will fail because of absence of done
+        };
+
+        // Fake executable
+        let executable = "testExecutable";
+
+        // Fake rules
+        let rules = "testRules";
+
+        // Fake input
+        let input = new PipelinePayloadModel("testUri");
+
+        // Run stub
+        let runStub = sinon.stub();
+        runStub.returns(Promise.resolve("Test ltrimXML <?xml><root>Test data</root>"));
+
+        // Fake service
+        let service = <PhpmdService> {};
+        service.run = runStub;
+
+        // Initialise strategy and configure
+        let strategy = new ExecuteProcessStrategy(executable, rules);
+        strategy.setService(service);
+
+        // Act
+        strategy.execute(input, resolve, reject);
+    }
 }

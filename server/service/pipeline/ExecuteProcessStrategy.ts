@@ -49,7 +49,7 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
         reject: (reason: any) => void
     ) {
         this.executeProcess(input.path).then((data) => {
-            input.raw = data;
+            input.raw = this.ltrimXML(data);
 
             resolve(input);
         }, (err: Error) => {
@@ -82,6 +82,16 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
         }
 
         return this.service;
+    }
+
+    /**
+     * Strip any leading text or whitespace before the xml opening tag
+     * 
+     * @param {string} xml
+     * @returns {string}
+     */
+    protected ltrimXML(xml: string): string {
+        return xml.substring(xml.indexOf("<?xml"));
     }
 
     /**
