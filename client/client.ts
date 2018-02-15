@@ -9,7 +9,7 @@ export function activate(context: ExtensionContext) {
 	let serverModule = context.asAbsolutePath(path.join('out', 'server', 'init.js'));
 
 	// Server debug options
-	let debugOptions = { execArgv: ["--nolazy", "--debug=6009"] };
+	let debugOptions = { execArgv: ["--nolazy", "--inspect"] };
 
     // Server options
 	let serverOptions: ServerOptions = {
@@ -24,9 +24,12 @@ export function activate(context: ExtensionContext) {
 			configurationSection: 'phpmd'
 		}
 	}
+
+	// Client launched in debug mode?
+	let forceDebug = process.execArgv.some(value => value.indexOf("--inspect") >= 0);
 	
 	// Create and start the client
-	let client = new LanguageClient('vscode-phpmd', 'PHP Mess Detector', serverOptions, clientOptions)
+	let client = new LanguageClient('vscode-phpmd', 'PHP Mess Detector', serverOptions, clientOptions, forceDebug);
 	let disposable = client.start();
 
 	console.log("PHP Mess Detector server started");
