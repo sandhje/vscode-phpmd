@@ -371,6 +371,7 @@ class Server {
      */
     protected createSettings(values: any): IPhpmdSettingsModel {
         let defaults: IPhpmdSettingsModel = {
+            enabled: true,
             command: "",
             rules: "",
             verbose: false,

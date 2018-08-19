@@ -6,6 +6,13 @@
  */
 interface IPhpmdSettingsModel {
     /**
+     * Enabled
+     *
+     * @property {boolean}
+     */
+    enabled: boolean;
+    
+    /**
      * PHP mess detector command
      *
      * @property {string}
