@@ -51,6 +51,11 @@
           "type": "boolean",
           "default": false,
           "description": "Enable verbose logging"
+        },
+        "phpmd.clearOnClose": {
+          "type": "boolean",
+          "default": true,
+          "description": "Clear diagnostics for a file upon closing it"
         }
       }
     }
