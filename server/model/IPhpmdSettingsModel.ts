@@ -22,9 +22,16 @@ interface IPhpmdSettingsModel {
     /**
      * Verbose mode
      *
-     * @property {string}
+     * @property {boolean}
      */
     verbose: boolean;
+
+    /**
+     * Clear errors on close
+     * 
+     * @property {boolean}
+     */
+    clearOnClose: boolean;
 }
 
 export default IPhpmdSettingsModel;

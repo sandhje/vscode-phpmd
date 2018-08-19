@@ -143,6 +143,21 @@ class PhpmdController {
     }
 
     /**
+     * Clear diagnostics for the text documents
+     * 
+     * @param document 
+     */
+    public clear(document: TextDocument | TextDocumentIdentifier): void {
+        if (!this.settings.clearOnClose) {
+            this.getLogger().info("Clearing of diagnostics disabled in settings");
+            return;
+        }
+
+        this.getLogger().info("Clearing diagnostics for " + document.uri);
+        this.connection.sendDiagnostics({uri: document.uri, diagnostics: []});
+    }
+
+    /**
      * PhpmdService setter
      *
      * Allows injection of phpmdService for better testability.
