@@ -37,6 +37,11 @@
       "type": "object",
       "title": "PHP Mess Detector configuration",
       "properties": {
+        "phpmd.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable mess detector"
+        },
         "phpmd.command": {
           "type": "string",
           "default": "",
