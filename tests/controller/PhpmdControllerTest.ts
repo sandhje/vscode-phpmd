@@ -21,6 +21,7 @@ class PhpmdControllerTest {
         // =======
         // Fake settings
         let settings = <IPhpmdSettingsModel> {
+            enabled: true,
             command: "test",
             rules: "cleancode,codesize,controversial,design,unusedcode,naming",
             verbose: true
@@ -103,6 +104,7 @@ class PhpmdControllerTest {
         // =======
         // Fake settings
         let settings = <IPhpmdSettingsModel> {
+            enabled: true,
             command: "test",
             rules: "cleancode,codesize,controversial,design,unusedcode,naming",
             verbose: true
@@ -146,6 +148,7 @@ class PhpmdControllerTest {
         // =======
         // Fake settings
         let settings = <IPhpmdSettingsModel> {
+            enabled: true,
             command: "test",
             rules: "cleancode,codesize,controversial,design,unusedcode,naming",
             verbose: true
@@ -198,5 +201,110 @@ class PhpmdControllerTest {
             expect(err).to.equal("Test error");
             done();
         });
+    }
+    
+    @test("Should not check if disabled")
+    public assertExtensionDisabled(done) {
+        // Arrange
+        // =======
+        // Fake settings
+        let settings = <IPhpmdSettingsModel> {
+            enabled: false,
+            command: "test",
+            rules: "cleancode,codesize,controversial,design,unusedcode,naming",
+            verbose: true
+        };
+
+        // Fake document
+        let document = <TextDocumentIdentifier> {
+            uri: "test"
+        };
+
+        // Stub connection
+        let connection = <IConnection> {};
+        connection.sendDiagnostics = sinon.spy();
+
+        // Create and configure controller
+        let controller = new PhpmdController(connection, settings);
+
+        // Act
+        // ===
+        controller.validate(document).then(() => {
+            // Assert
+            // ======
+            expect((<sinon.SinonSpy>connection.sendDiagnostics).notCalled).to.be.true;
+            done();
+        });
+    }
+    
+    @test("Should clear diagnostics")
+    public assertClear(done) {
+        // Arrange
+        // =======
+        // Fake settings
+        let settings = <IPhpmdSettingsModel> {
+            enabled: true,
+            command: "test",
+            rules: "cleancode,codesize,controversial,design,unusedcode,naming",
+            verbose: true,
+            clearOnClose: true
+        };
+
+        // Fake document
+        let document = <TextDocumentIdentifier> {
+            uri: "test"
+        };
+
+        // Stub connection
+        let connection = <IConnection> {};
+        connection.sendDiagnostics = (diagnosticParams => {
+            // Assert
+            // ======
+            expect(diagnosticParams.diagnostics).to.be.empty;
+            done();
+        });
+
+        // Create and configure controller
+        let controller = new PhpmdController(connection, settings);
+        controller.setLogger(new NullLogger());
+
+        // Act
+        // ===
+        controller.clear(document);
+    }
+
+    
+    @test("Should not clear diagnostics if disabled in settings")
+    public assertClearDisabled() {
+        // Arrange
+        // =======
+        // Fake settings
+        let settings = <IPhpmdSettingsModel> {
+            enabled: true,
+            command: "test",
+            rules: "cleancode,codesize,controversial,design,unusedcode,naming",
+            verbose: true,
+            clearOnClose: false
+        };
+
+        // Fake document
+        let document = <TextDocumentIdentifier> {
+            uri: "test"
+        };
+
+        // Stub connection
+        let connection = <IConnection> {};
+        connection.sendDiagnostics = sinon.spy();
+
+        // Create and configure controller
+        let controller = new PhpmdController(connection, settings);
+        controller.setLogger(new NullLogger());
+
+        // Act
+        // ===
+        controller.clear(document);
+
+        // Assert
+        expect((<sinon.SinonSpy>connection.sendDiagnostics).notCalled).to.be.true;
     }
 };

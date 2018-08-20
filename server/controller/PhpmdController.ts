@@ -93,6 +93,11 @@ class PhpmdController {
      * @returns {Promise<boolean>} Resolves with true on success, rejects with error on failure
      */
     public validate(document: TextDocument | TextDocumentIdentifier): Promise<boolean> {
+        if (!this.settings.enabled) {
+            this.getLogger().info("Extension disabled, bailing out");
+            return Promise.resolve(true);
+        }
+
         this.getLogger().info("PHP Mess Detector validation started for " + document.uri, true);
 
         return new Promise<boolean>((resolve, reject) => {
@@ -140,6 +145,21 @@ class PhpmdController {
                 reject(err);
             });
         });
+    }
+
+    /**
+     * Clear diagnostics for the text documents
+     * 
+     * @param document 
+     */
+    public clear(document: TextDocument | TextDocumentIdentifier): void {
+        if (!this.settings.clearOnClose) {
+            this.getLogger().info("Clearing of diagnostics disabled in settings");
+            return;
+        }
+
+        this.getLogger().info("Clearing diagnostics for " + document.uri);
+        this.connection.sendDiagnostics({uri: document.uri, diagnostics: []});
     }
 
     /**

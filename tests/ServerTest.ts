@@ -38,6 +38,7 @@ class ServerTest {
         connection.onDidChangeConfiguration = () => { /* Fake */ };
         connection.onDidOpenTextDocument = () => { /* Fake */ };
         connection.onDidSaveTextDocument = () => { /* Fake */ };
+        connection.onDidCloseTextDocument = () => { /* Fake */ };
         connection.onInitialize = onInitializeStub;
         connection.listen = connectionListenSpy;
 
@@ -206,6 +207,7 @@ class ServerTest {
         let connection = <IConnection> {};
         connection.onDidChangeConfiguration = () => { /* Fake */ };
         connection.onDidOpenTextDocument = () => { /* Fake */ };
+        connection.onDidCloseTextDocument = () => { /* Fake */ };
         connection.onDidSaveTextDocument = onDidSaveTextDocumentStub;
 
         // Fake controller
@@ -216,6 +218,56 @@ class ServerTest {
             done();
 
             return Promise.resolve(true);
+        };
+
+        // Create and configure server
+        let server = new Server();
+        server.setDocumentsManager(documentsManager);
+        server.setConnection(connection);
+        server.setController(controller);
+        server.setLoggerFactory(new NullLoggerFactory());
+
+        // Act
+        server.main();
+    }
+
+    @test("Should clear problems on close document")
+    public assertClearOnDidCloseTextDocument(done) {
+        // Arrange
+        // =======
+        // Fake parameters
+        let parameters = <any> {
+            textDocument: <TextDocumentIdentifier> {}
+        };
+
+        // Stub connection.onDidOpenTextDocument
+        let onDidCloseTextDocumentStub = sinon.stub();
+        onDidCloseTextDocumentStub.callsArgWith(0, parameters);
+        
+        // Fake documentsManager
+        let document = <TextDocument> {};
+        let documentsManager = <TextDocuments> {};
+        documentsManager.all = () => {
+            return <TextDocument[]> [document];
+        };
+
+        // DocumentsManager listen spy
+        let dmListenSpy = sinon.spy();
+        documentsManager.listen = dmListenSpy;
+
+        // Fake connection
+        let connection = <IConnection> {};
+        connection.onDidChangeConfiguration = () => { /* Fake */ };
+        connection.onDidOpenTextDocument = () => { /* Fake */ };
+        connection.onDidSaveTextDocument = () => { /* Fake */ };
+        connection.onDidCloseTextDocument = onDidCloseTextDocumentStub;
+
+        // Fake controller
+        let controller = <PhpmdController> {};
+        controller.clear = (documentToValidate) => {
+            // Assert
+            expect(documentToValidate).to.equal(parameters.textDocument);
+            done();
         };
 
         // Create and configure server
@@ -262,6 +314,7 @@ class ServerTest {
         connection.onDidChangeConfiguration = onDidChangeConfigurationStub;
         connection.onDidOpenTextDocument = () => { /* Fake */ };
         connection.onDidSaveTextDocument = () => { /* Fake */ };
+        connection.onDidCloseTextDocument = () => { /* Fake */ };
         connection.onInitialize = () => { /* Fake */ };
         connection.listen = () => { /* Fake */ };
 
@@ -349,6 +402,7 @@ class ServerTest {
         connection.onDidChangeConfiguration = () => { /* Fake */ };
         connection.onDidOpenTextDocument = onDidOpenTextDocumentStub;
         connection.onDidSaveTextDocument = () => { /* Fake */ };
+        connection.onDidCloseTextDocument = () => { /* Fake */ };
         connection.onInitialize = () => { /* Fake */ };
         connection.listen = () => { /* Fake */ };
 
@@ -420,6 +474,7 @@ class ServerTest {
         connection.onDidChangeConfiguration = () => { /* Fake */ };
         connection.onDidOpenTextDocument = () => { /* Fake */ };
         connection.onDidSaveTextDocument = onDidSaveTextDocumentStub;
+        connection.onDidCloseTextDocument = () => { /* Fake */ };
         connection.onInitialize = () => { /* Fake */ };
         connection.listen = () => { /* Fake */ };
 
@@ -491,6 +546,7 @@ class ServerTest {
         connection.onDidChangeConfiguration = () => { /* Fake */ };
         connection.onDidOpenTextDocument = () => { /* Fake */ };
         connection.onDidSaveTextDocument = onDidSaveTextDocumentStub;
+        connection.onDidCloseTextDocument = () => { /* Fake */ };
         connection.onInitialize = () => { /* Fake */ };
         connection.listen = () => { /* Fake */ };
 

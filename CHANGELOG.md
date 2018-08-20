@@ -1,3 +1,8 @@
+# Version 1.1.0
+
+* Added clearing of diagnostics on file close (issue #36)
+* Added enabled setting (issue #37)
+
 # Version 1.0.4
 
 * Fix issue #30

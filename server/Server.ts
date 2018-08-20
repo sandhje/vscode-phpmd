@@ -264,6 +264,15 @@ class Server {
             });
         });
 
+        // A php document was closed
+        connection.onDidCloseTextDocument((parameters) => {
+            this.getLogger().info("Document closed, clearing messages.");
+            
+            let document: TextDocumentIdentifier = parameters.textDocument;
+
+            this.getController().clear(document);
+        });
+
         // Set connection capabilities
         connection.onInitialize((params) => {
             this.getLogger().info("Language server connection initialized.");
@@ -362,9 +371,11 @@ class Server {
      */
     protected createSettings(values: any): IPhpmdSettingsModel {
         let defaults: IPhpmdSettingsModel = {
+            enabled: true,
             command: "",
             rules: "",
             verbose: false,
+            clearOnClose: true
         };
 
         let settings: IPhpmdSettingsModel = Object.assign<IPhpmdSettingsModel, any>(defaults, values);

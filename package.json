@@ -4,7 +4,7 @@
   "description": "VSCode plugin for PHP Mess Detector",
   "author": "Ecodes.io",
   "license": "MIT",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "publisher": "ecodes",
   "engines": {
     "vscode": "^1.8.0"
@@ -37,6 +37,11 @@
       "type": "object",
       "title": "PHP Mess Detector configuration",
       "properties": {
+        "phpmd.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable mess detector"
+        },
         "phpmd.command": {
           "type": "string",
           "default": "",
@@ -51,6 +56,11 @@
           "type": "boolean",
           "default": false,
           "description": "Enable verbose logging"
+        },
+        "phpmd.clearOnClose": {
+          "type": "boolean",
+          "default": true,
+          "description": "Clear diagnostics for a file upon closing it"
         }
       }
     }
