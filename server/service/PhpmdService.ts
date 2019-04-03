@@ -45,7 +45,7 @@ class PhpmdService {
      */
     public testPhp(): Promise<boolean> {
         if (this.command.toLowerCase().substr(0, 4) !== "php ") {
-            this.getLogger().info("PHP mess detector command not using global PHP, skipping PHP test", true);
+            this.getLogger().info("PHP Mess Detector command not using global PHP, skipping PHP test", true);
             return Promise.resolve(true);
         }
 
@@ -72,7 +72,7 @@ class PhpmdService {
             this.testPhp().then(() => {
                 return this.execute(this.command + " --version");
             }).then((data) => {
-                this.getLogger().info("PHP Mess Detector test succesful (" + data.trim() + ")", true);
+                this.getLogger().info("PHP Mess Detector test successful (" + data.trim() + ")", true);
                 resolve(true);
             }, (err: Error) => {
                 reject(err);
