@@ -1,5 +1,6 @@
 import { IExecuteStrategy } from "@open-sourcerers/j-stillery";
 import * as Process from "child_process";
+import { homedir } from "os";
 import PipelineErrorModel from "../../model/PipelineErrorModel";
 import PipelinePayloadModel from "../../model/PipelinePayloadModel";
 import ILogger from "../logger/ILogger";
@@ -101,7 +102,7 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
      * @returns {Promise<string>}
      */
     protected executeProcess(path: string): Promise<string> {
-        return this.getService().run("\"" + path + "\"" + " xml \"" + this.rules + "\"");
+        return this.getService().run("\"" + path + "\"" + " xml \"" + this.rules.replace(/^~/, homedir()) + "\"");
     }
 }
 
