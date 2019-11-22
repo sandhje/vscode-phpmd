@@ -101,7 +101,7 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
      * @returns {Promise<string>}
      */
     protected executeProcess(path: string): Promise<string> {
-        return this.getService().run("\"" + path + "\"" + " xml \"" + this.rules + "\"");
+        return this.getService().run(`"${path}" xml "${this.rules}"`);
     }
 }
 

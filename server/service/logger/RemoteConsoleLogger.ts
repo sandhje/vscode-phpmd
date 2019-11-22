@@ -1,4 +1,4 @@
-import { RemoteConsole } from "vscode-languageserver";
+import { RemoteConsole, IConnection, ClientCapabilities, ServerCapabilities } from "vscode-languageserver";
 import ILogger from "./ILogger";
 
 /**
@@ -15,6 +15,39 @@ class RemoteConsoleLogger implements ILogger {
      * @param {boolean} verbose
      */
     constructor(private remoteConsole: RemoteConsole, private verbose: boolean = false) {}
+
+    /**
+     * Attach the remote to the given connection.
+     *
+     * @param connection The connection this remote is operating on.
+     */
+    attach(connection: IConnection): void {
+        throw new Error("Method not implemented.");
+    };
+
+    /**
+     * The connection this remote is attached to.
+     */
+    connection: IConnection;
+
+    /**
+     * Called to initialize the remote with the given
+     * client capabilities
+     *
+     * @param capabilities The client capabilities
+     */
+    initialize(capabilities: ClientCapabilities): void {
+        throw new Error("Method not implemented.");
+    }
+
+    /**
+     * Called to fill in the server capabilities this feature implements.
+     *
+     * @param capabilities The server capabilities to fill.
+     */
+    fillServerCapabilities(capabilities: ServerCapabilities): void {
+        throw new Error("Method not implemented.");
+    }
 
     /**
      * @see ILogger::setVerbose

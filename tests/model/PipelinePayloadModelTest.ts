@@ -1,7 +1,7 @@
 import { assert, expect } from "chai";
 import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
 import * as sinon from "sinon";
-import Uri from "vscode-uri";
+import { URI } from "vscode-uri";
 import PipelinePayloadModel from "../../server/model/PipelinePayloadModel";
 
 @suite("Pipeline payload model")
@@ -21,6 +21,6 @@ class PipelinePayloadModelTest {
         let path = model.path;
 
         // Assert
-        expect(path).to.equal(Uri.parse(uri).fsPath);
+        expect(path).to.equal(URI.parse(uri).fsPath);
     }
 }

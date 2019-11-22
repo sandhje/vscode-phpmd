@@ -6,6 +6,7 @@ import PipelineErrorModel from "../../../server/model/PipelineErrorModel";
 import PipelinePayloadModel from "../../../server/model/PipelinePayloadModel";
 import PhpmdService from "../../../server/service/PhpmdService";
 import ExecuteProcessStrategy from "../../../server/service/pipeline/ExecuteProcessStrategy";
+import { URI } from "vscode-uri";
 
 @suite("ExectuteProcess strategy")
 class ExecuteProcessStrategyTest {
@@ -18,7 +19,7 @@ class ExecuteProcessStrategyTest {
         let resolve = (output: PipelinePayloadModel) => {
             // Assert
             // ======
-            expect(runStub.calledWithExactly("\"testUri\" xml \"testRules\"")).to.be.true;
+            expect(runStub.calledWithExactly(`"${URI.parse("testUri").fsPath}" xml "testRules"`)).to.be.true;
             expect(runStub.calledOnce).to.be.true;
             expect(output.raw).to.equal("Test data");
             done();
@@ -67,7 +68,7 @@ class ExecuteProcessStrategyTest {
         let reject = (reason: PipelineErrorModel) => {
             // Assert
             // ======
-            expect(runStub.calledWithExactly("\"testUri\" xml \"testRules\"")).to.be.true;
+            expect(runStub.calledWithExactly(`"${URI.parse("testUri").fsPath}" xml "testRules"`)).to.be.true;
             expect(reason.error.message).to.equal("Test error");
             expect(reason.silent).to.be.false;
             done();
