@@ -3,10 +3,10 @@ node_js:
 - '8'
 before_install:
   # Yarn
-  - sudo apt-key adv --keyserver pgp.mit.edu --recv D101F7899D41F3C3
+  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 762E3157
   - echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
   - sudo apt-get update -qq
-  - sudo apt-get install -y -qq yarn
+  - sudo apt-get install -y -qq yarn --allow-unauthenticated
 cache:
   directories:
   - $HOME/.yarn-cache
