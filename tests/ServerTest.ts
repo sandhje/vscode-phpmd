@@ -96,6 +96,7 @@ class ServerTest {
             // Assert
             expect(setConnectionSpy.calledOnce && setConnectionSpy.calledWith(connection)).to.be.true;
             expect(setSettingsSpy.calledOnce).to.be.true;
+            expect(setEnvironmentSpy.calledOnce).to.be.true;
             expect(documentToValidate).to.equal(document);
             done();
 
@@ -110,8 +111,10 @@ class ServerTest {
         // SetConnection and SetSettings spies
         let setConnectionSpy = sinon.spy();
         let setSettingsSpy = sinon.spy();
+        let setEnvironmentSpy = sinon.spy();
         controllerFactory.setConnection = setConnectionSpy;
         controllerFactory.setSettings = setSettingsSpy;
+        controllerFactory.setEnvironment = setEnvironmentSpy;
 
         // Create stub
         let createStub = sinon.stub();
@@ -334,8 +337,10 @@ class ServerTest {
         // SetConnection and SetSettings spies
         let setConnectionSpy = sinon.spy();
         let setSettingsSpy = sinon.spy();
+        let setEnvironmentSpy = sinon.spy();
         controllerFactory.setConnection = setConnectionSpy;
         controllerFactory.setSettings = setSettingsSpy;
+        controllerFactory.setEnvironment = setEnvironmentSpy;
 
         // Create stub
         let createStub = sinon.stub();

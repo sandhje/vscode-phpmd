@@ -7,6 +7,7 @@ import PipelinePayloadModel from "../../../server/model/PipelinePayloadModel";
 import PhpmdService from "../../../server/service/PhpmdService";
 import ExecuteProcessStrategy from "../../../server/service/pipeline/ExecuteProcessStrategy";
 import { URI } from "vscode-uri";
+import PhpmdCommandBuilder from "../../../server/service/PhpmdCommandBuilder";
 
 @suite("ExectuteProcess strategy")
 class ExecuteProcessStrategyTest {
@@ -33,6 +34,9 @@ class ExecuteProcessStrategyTest {
         // Fake executable
         let executable = "testExecutable";
 
+        // Fake commandBuilder
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+
         // Fake rules
         let rules = "testRules";
 
@@ -48,7 +52,7 @@ class ExecuteProcessStrategyTest {
         service.run = runStub;
 
         // Initialise strategy and configure
-        let strategy = new ExecuteProcessStrategy(executable, rules);
+        let strategy = new ExecuteProcessStrategy(commandBuilderFake, rules);
         strategy.setService(service);
 
         // Act
@@ -77,6 +81,9 @@ class ExecuteProcessStrategyTest {
         // Fake executable
         let executable = "testExecutable";
 
+        // Fake commandBuilder
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+
         // Fake rules
         let rules = "testRules";
 
@@ -92,7 +99,7 @@ class ExecuteProcessStrategyTest {
         service.run = runStub;
 
         // Initialise strategy and configure
-        let strategy = new ExecuteProcessStrategy(executable, rules);
+        let strategy = new ExecuteProcessStrategy(commandBuilderFake, rules);
         strategy.setService(service);
 
         // Act
@@ -119,6 +126,9 @@ class ExecuteProcessStrategyTest {
         // Fake executable
         let executable = "testExecutable";
 
+        // Fake commandBuilder
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+
         // Fake rules
         let rules = "testRules";
 
@@ -134,7 +144,7 @@ class ExecuteProcessStrategyTest {
         service.run = runStub;
 
         // Initialise strategy and configure
-        let strategy = new ExecuteProcessStrategy(executable, rules);
+        let strategy = new ExecuteProcessStrategy(commandBuilderFake, rules);
         strategy.setService(service);
 
         // Act
