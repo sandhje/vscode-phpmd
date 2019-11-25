@@ -1,7 +1,7 @@
 import * as Path from "path";
 import {
     createConnection, IConnection, InitializeResult, IPCMessageReader, IPCMessageWriter,
-    TextDocument, TextDocumentIdentifier, TextDocuments
+    TextDocument, TextDocumentIdentifier, TextDocuments, WorkspaceFolder
 } from "vscode-languageserver";
 import PhpmdController from "./controller/PhpmdController";
 import ClientConnectionNotifierFactory from "./factory/ClientConnectionNotifierFactory";
@@ -14,6 +14,8 @@ import ILogger from "./service/logger/ILogger";
 import NullLogger from "./service/logger/NullLogger";
 import INotifier from "./service/notifier/INotifier";
 import NullNotifier from "./service/notifier/NullNotifier";
+import IPhpmdEnvironmentModel from "./model/IPhpmdEnvironmentModel";
+import { homedir } from "os";
 
 /**
  * PHP mess detector language server
@@ -28,6 +30,20 @@ class Server {
      * @property {IConnection} connection
      */
     private connection: IConnection;
+
+    /**
+     * VSCode client workspace folders
+     * 
+     * @property {WorkspaceFolder[]} workspaceFolders
+     */
+    private workspaceFolders: WorkspaceFolder[];
+
+    /**
+     * OS home directory
+     * 
+     * @property {string} homeDir
+     */
+    private homeDir: string;
 
     /**
      * PHP mess detector controller class
@@ -102,6 +118,30 @@ class Server {
      */
     public setConnection(connection: IConnection): void {
         this.connection = connection;
+    }
+
+    /**
+     * WorkspaceFolders setter
+     *
+     * Allows injection of workspaceFolders for better testability.
+     *
+     * @param {WorkspaceFolder[]} workspaceFolders
+     * @returns {void}
+     */
+    public setWorkspaceFolders(workspaceFolders: WorkspaceFolder[]): void {
+        this.workspaceFolders = workspaceFolders;
+    }
+
+    /**
+     * HomeDir setter
+     *
+     * Allows injection of homedir for better testability.
+     *
+     * @param {string} HomeDir
+     * @returns {void}
+     */
+    public setHomeDir(homeDir: string): void {
+        this.homeDir = homeDir;
     }
 
     /**
@@ -215,10 +255,11 @@ class Server {
             this.getLogger().info("Configuration change triggerd, validating all open documents.");
 
             let settings = this.createSettings(change.settings.phpmd);
+            let environment = this.createEnvironment();
             this.logger.setVerbose(settings.verbose);
 
             this.getLogger().info("Creating controller", true);
-            this.createController(connection, settings);
+            this.createController(connection, settings, environment);
 
             // (Re)Validate any open text documents
             documentsManager.all().forEach((document: TextDocument) => {
@@ -277,6 +318,11 @@ class Server {
         connection.onInitialize((params) => {
             this.getLogger().info("Language server connection initialized.");
 
+            if (params && params.workspaceFolders) {
+                this.getLogger().info(`Setting workspaceFolders ${JSON.stringify(params.workspaceFolders)}.`);
+                this.setWorkspaceFolders(params.workspaceFolders)
+            }
+
             return this.getInitializeResult();
         });
 
@@ -308,6 +354,28 @@ class Server {
         }
 
         return this.connection;
+    }
+
+    /**
+     * Get the VSCode connection workspaceFolders
+     *
+     * @returns {WorkspaceFolder[]}
+     */
+    protected getWorkspaceFolders(): WorkspaceFolder[] {
+        return this.workspaceFolders;
+    }
+
+    /**
+     * Get the OS HomeDir
+     *
+     * @returns {string}
+     */
+    protected getHomeDir(): string {
+        if (!this.homeDir) {
+            this.homeDir = homedir(); 
+        }
+
+        return this.homeDir;
     }
 
     /**
@@ -388,6 +456,22 @@ class Server {
     }
 
     /**
+     * Create a environment model
+     *
+     * Create a PHPMD environment model from the server environment
+     *
+     * @param {IPhpmdEnvironmentModel}
+     */
+    protected createEnvironment(): IPhpmdEnvironmentModel {
+        const environment: IPhpmdEnvironmentModel = {
+            workspaceFolders: this.getWorkspaceFolders(),
+            homeDir: this.getHomeDir()
+        };
+
+        return environment;
+    }
+
+    /**
      * Get the default command
      *
      * Get the default PHPMD command string to execute the shipped PHPMD phar file with php
@@ -413,14 +497,17 @@ class Server {
      * @param {IPhpmdSettingsModel} settings
      * @returns {void}
      */
-    protected createController(connection: IConnection, settings: IPhpmdSettingsModel): void {
+    protected createController(connection: IConnection, settings: IPhpmdSettingsModel, environment: IPhpmdEnvironmentModel): void {
         let controllerFactory = this.getControllerFactory();
         controllerFactory.setConnection(connection);
         controllerFactory.setSettings(settings);
+        controllerFactory.setEnvironment(environment);
 
         this.controller = controllerFactory.create();
         this.controller.setLogger(this.getLogger());
         this.controller.setNotifier(this.getNotifier());
+
+        this.getLogger().info(`Created controller with settings '${JSON.stringify(settings)}' and environment '${JSON.stringify(environment)}'`);
     }
 
     /**

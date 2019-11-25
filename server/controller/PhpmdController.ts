@@ -15,6 +15,8 @@ import NullLogger from "../service/logger/NullLogger";
 import INotifier from "../service/notifier/INotifier";
 import NullNotifier from "../service/notifier/NullNotifier";
 import PhpmdService from "../service/PhpmdService";
+import PhpmdCommandBuilder from "../service/PhpmdCommandBuilder";
+import IPhpmdEnvironmentModel from "../model/IPhpmdEnvironmentModel";
 
 /**
  * PHP mess detector controller
@@ -58,6 +60,15 @@ class PhpmdController {
     private notifier: INotifier;
 
     /**
+     * PHP mess detector command builder
+     *
+     * Service class used to build the phpmd command
+     *
+     * @property {PhpmdCommandBuilder} commandBuilder
+     */
+    private commandBuilder: PhpmdCommandBuilder;
+
+    /**
      * PHP mess detector service
      *
      * Service class used to interact with the PHP mess detecter executable
@@ -83,7 +94,8 @@ class PhpmdController {
      */
     constructor(
         private connection: IConnection,
-        private settings: IPhpmdSettingsModel
+        private settings: IPhpmdSettingsModel,
+        private environment: IPhpmdEnvironmentModel
     ) { }
 
     /**
@@ -163,6 +175,18 @@ class PhpmdController {
     }
 
     /**
+     * PhpmdCommandBuilder setter
+     *
+     * Allows injection of phpmdCommandBuilder for better testability.
+     *
+     * @param {PhpmdCommandBuilder} commandBuilder
+     * @returns {void}
+     */
+    public setCommandBuilder(commandBuilder: PhpmdCommandBuilder): void {
+        this.commandBuilder = commandBuilder;
+    }
+
+    /**
      * PhpmdService setter
      *
      * Allows injection of phpmdService for better testability.
@@ -223,6 +247,27 @@ class PhpmdController {
     }
 
     /**
+     * Get the PHP mess detector command builder
+     *
+     * Create a command builder based on this server's settings if no service was set before
+     *
+     * @returns {PhpmdCommandBuilder}
+     */
+    protected getCommandBuilder(): PhpmdCommandBuilder {
+        if (!this.commandBuilder) {
+            // TODO: add workspacefolders and homedir from settings
+            this.commandBuilder = new PhpmdCommandBuilder(
+                this.settings.command,
+                this.environment.workspaceFolders,
+                this.environment.homeDir
+            );
+            this.commandBuilder.setLogger(this.getLogger());
+        }
+
+        return this.commandBuilder;
+    }
+
+    /**
      * Get the PHP mess detector service
      *
      * Create a service based on this server's settings if no service was set before
@@ -231,7 +276,7 @@ class PhpmdController {
      */
     protected getService(): PhpmdService {
         if (!this.service) {
-            this.service = new PhpmdService(this.settings.command);
+            this.service = new PhpmdService(this.getCommandBuilder());
             this.service.setLogger(this.getLogger());
         }
 
@@ -247,7 +292,7 @@ class PhpmdController {
      */
     protected getPipeline(): Pipeline<PipelinePayloadModel> {
         if (!this.pipeline) {
-            this.pipeline = new PipelineFactory(this.settings, this.getLogger()).create();
+            this.pipeline = new PipelineFactory(this.settings, this.environment, this.getLogger()).create();
         }
 
         return this.pipeline;
