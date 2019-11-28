@@ -52,6 +52,13 @@ class PhpmdCommandBuilder {
      * @returns {string}
      */
     public buildPhpmdCommand(options: string): string {
+        // Replace homedir in options
+        if (options.indexOf("\"~/") > -1)
+            options = options.replace(`"~/`, `"${this.homeDir}/`);
+
+        if (options.indexOf("\"~\\") > -1)
+            options = options.replace(`"~\\`, `"${this.homeDir}\\`);
+
         const command = `${this.command} ${options}`;
         this.getLogger().info(`Building phpmd command: ${command}`, true);
 
