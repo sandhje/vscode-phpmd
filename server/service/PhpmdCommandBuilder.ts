@@ -1,5 +1,6 @@
 import ILogger from "./logger/ILogger";
 import NullLogger from "./logger/NullLogger";
+import { URI } from "vscode-uri";
 import { WorkspaceFolder } from "vscode-languageserver";
 
 /**
@@ -59,6 +60,17 @@ class PhpmdCommandBuilder {
         if (options.indexOf("\"~\\") > -1)
             options = options.replace(`"~\\`, `"${this.homeDir}\\`);
 
+        // Replace workspaceFolder in options
+        if (options.indexOf("${workspaceFolder}") > -1)
+        {
+            const file = this.getFileFromOptions(options);
+            const folder = this.getWorkspaceFolderForFile(file);
+
+            if (file && folder) {
+                options = options.replace("${workspaceFolder}", folder);
+            }
+        }
+
         const command = `${this.command} ${options}`;
         this.getLogger().info(`Building phpmd command: ${command}`, true);
 
@@ -88,6 +100,45 @@ class PhpmdCommandBuilder {
         }
 
         return this.logger;
+    }
+
+    protected getFileFromOptions(options: string): string {
+        if (!options)
+            return undefined;
+
+        const optionsSegments = options.split(" ");
+        const fileSegment = optionsSegments[0];
+
+        if (!fileSegment || fileSegment.length <= 2)
+            return undefined;
+        
+        return fileSegment.substring(1, fileSegment.length - 1);
+    }
+
+    protected getWorkspaceFolderForFile(file: string): string {
+        if (!file)
+            return undefined;
+        
+        if (!this.workspaceFolders || !this.workspaceFolders.length)
+            return undefined;
+        
+        let workspaceFolder = this.workspaceFolders.find(folder => {
+            const folderPath = URI.parse(folder.uri).fsPath;
+            const result = file.startsWith(folderPath);
+
+            if (result)
+                this.getLogger().info(`Found match between file and workspace folder (file: "${file}", workspaceFolder: "${folderPath}")`, true);
+            
+            return result;
+        });
+
+        if (!workspaceFolder) {
+            this.getLogger().info(`No matching workspace folder found for file "${file}"`, true);
+            this.getLogger().info(`Using first folder in workspace folder array: "${URI.parse(this.workspaceFolders[0].uri).fsPath}"`, true);
+            workspaceFolder = this.workspaceFolders[0];
+        }        
+
+        return URI.parse(workspaceFolder.uri).fsPath;
     }
 }
 
