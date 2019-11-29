@@ -2,6 +2,8 @@ import { assert, expect } from "chai";
 import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
 import * as sinon from "sinon";
 import PhpmdCommandBuilder from "../../server/service/PhpmdCommandBuilder";
+import { URI } from "vscode-uri";
+import { WorkspaceFolder } from "vscode-languageserver";
 
 @suite("PhpMD Command Builder")
 class PhpmdCommandBuilderTest {
@@ -94,5 +96,43 @@ class PhpmdCommandBuilderTest {
         // Assert
         expect(commandBuilder.buildPhpmdCommand(options))
             .to.equal(`php /path/to/phpmd.phar "/path/to/file.php" xml "C:\\Users\\Test\\phpmd.xml"`);
+    }
+
+    @test("Should replace workspace folder and build phpmd command")
+    public assertWorkspaceFolderBuildPhpMDCommand() {
+        // Arrange
+        const command = "php /path/to/phpmd.phar";
+        const workspaceFolders: WorkspaceFolder[] = [
+            { name: "nomatch", uri: "file:///no/match/to/test" },
+            { name: "test", uri: "file:///path/to/test" },
+        ];
+        const homeDir = "/home";
+        const options = `"${URI.parse("/path/to/test/file.php").fsPath}" xml "$\{workspaceFolder\}/phpmd.xml"`;
+        
+        // Act
+        const commandBuilder = new PhpmdCommandBuilder(command, workspaceFolders, homeDir);
+        
+        // Assert
+        expect(commandBuilder.buildPhpmdCommand(options))
+            .to.equal(`php /path/to/phpmd.phar "${URI.parse("/path/to/test/file.php").fsPath}" xml "${URI.parse("file:///path/to/test").fsPath}/phpmd.xml"`);
+    }
+
+    @test("Should default to first workspace folder if no match found and build phpmd command")
+    public assertDefaultWorkspaceFolderBuildPhpMDCommand() {
+        // Arrange
+        const command = "php /path/to/phpmd.phar";
+        const workspaceFolders: WorkspaceFolder[] = [
+            { name: "nomatch", uri: "file:///no/match/to/test" },
+            { name: "test", uri: "file:///path/to/test" },
+        ];
+        const homeDir = "/home";
+        const options = `"${URI.parse("/not/path/to/test/file.php").fsPath}" xml "$\{workspaceFolder\}/phpmd.xml"`;
+        
+        // Act
+        const commandBuilder = new PhpmdCommandBuilder(command, workspaceFolders, homeDir);
+        
+        // Assert
+        expect(commandBuilder.buildPhpmdCommand(options))
+            .to.equal(`php /path/to/phpmd.phar "${URI.parse("/not/path/to/test/file.php").fsPath}" xml "${URI.parse("file:///no/match/to/test").fsPath}/phpmd.xml"`);
     }
 }
