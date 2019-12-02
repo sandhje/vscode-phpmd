@@ -2,7 +2,7 @@ import { Pipeline } from "@open-sourcerers/j-stillery";
 import { assert, expect } from "chai";
 import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
 import * as sinon from "sinon";
-import { Diagnostic, IConnection, Position, Range, TextDocumentIdentifier } from "vscode-languageserver";
+import { Diagnostic, IConnection, Position, Range, TextDocumentIdentifier, WorkspaceFolder } from "vscode-languageserver";
 import PhpmdController from "../../server/controller/PhpmdController";
 import PipelinePayloadFactory from "../../server/factory/PipelinePayloadFactory";
 import IPhpmdSettingsModel from "../../server/model/IPhpmdSettingsModel";
@@ -11,6 +11,7 @@ import PipelinePayloadModel from "../../server/model/PipelinePayloadModel";
 import NullLogger from "../../server/service/logger/NullLogger";
 import NullNotifier from "../../server/service/notifier/NullNotifier";
 import PhpmdService from "../../server/service/PhpmdService";
+import IPhpmdEnvironmentModel from "../../server/model/IPhpmdEnvironmentModel";
 
 @suite("PhpMD controller")
 class PhpmdControllerTest {
@@ -25,6 +26,17 @@ class PhpmdControllerTest {
             command: "test",
             rules: "cleancode,codesize,controversial,design,unusedcode,naming",
             verbose: true
+        };
+
+        // Fake environment
+        let environment = <IPhpmdEnvironmentModel> {
+            homeDir: "/home/JohnDoe",
+            workspaceFolders: <WorkspaceFolder[]> [
+                {
+                    name: "www",
+                    uri: "file://var/www"
+                }
+            ]
         };
 
         // Fake document
@@ -81,7 +93,7 @@ class PhpmdControllerTest {
         let pipeline = new Pipeline<PipelinePayloadModel>();
 
         // Create and configure controller
-        let controller = new PhpmdController(connection, settings);
+        let controller = new PhpmdController(connection, settings, environment);
         controller.setPipeline(pipeline);
         controller.setPipelinePayloadFactory(pipelinePayloadFactory);
         controller.setLogger(new NullLogger());
@@ -110,6 +122,17 @@ class PhpmdControllerTest {
             verbose: true
         };
 
+        // Fake environment
+        let environment = <IPhpmdEnvironmentModel> {
+            homeDir: "/home/JohnDoe",
+            workspaceFolders: <WorkspaceFolder[]> [
+                {
+                    name: "www",
+                    uri: "file://var/www"
+                }
+            ]
+        };
+
         // Fake document
         let document = <TextDocumentIdentifier> {
             uri: "test"
@@ -127,7 +150,7 @@ class PhpmdControllerTest {
         let connection = <IConnection> {};
 
         // Create and configure controller
-        let controller = new PhpmdController(connection, settings);
+        let controller = new PhpmdController(connection, settings, environment);
         controller.setLogger(new NullLogger());
         controller.setNotifier(new NullNotifier());
         controller.setService(service);
@@ -152,6 +175,17 @@ class PhpmdControllerTest {
             command: "test",
             rules: "cleancode,codesize,controversial,design,unusedcode,naming",
             verbose: true
+        };
+
+        // Fake environment
+        let environment = <IPhpmdEnvironmentModel> {
+            homeDir: "/home/JohnDoe",
+            workspaceFolders: <WorkspaceFolder[]> [
+                {
+                    name: "www",
+                    uri: "file://var/www"
+                }
+            ]
         };
 
         // Fake document
@@ -188,7 +222,7 @@ class PhpmdControllerTest {
         pipeline.run = runStub;
 
         // Create and configure controller
-        let controller = new PhpmdController(connection, settings);
+        let controller = new PhpmdController(connection, settings, environment);
         controller.setPipeline(pipeline);
         controller.setPipelinePayloadFactory(pipelinePayloadFactory);
         controller.setService(service);
@@ -215,6 +249,17 @@ class PhpmdControllerTest {
             verbose: true
         };
 
+        // Fake environment
+        let environment = <IPhpmdEnvironmentModel> {
+            homeDir: "/home/JohnDoe",
+            workspaceFolders: <WorkspaceFolder[]> [
+                {
+                    name: "www",
+                    uri: "file://var/www"
+                }
+            ]
+        };
+
         // Fake document
         let document = <TextDocumentIdentifier> {
             uri: "test"
@@ -225,7 +270,7 @@ class PhpmdControllerTest {
         connection.sendDiagnostics = sinon.spy();
 
         // Create and configure controller
-        let controller = new PhpmdController(connection, settings);
+        let controller = new PhpmdController(connection, settings, environment);
 
         // Act
         // ===
@@ -250,6 +295,17 @@ class PhpmdControllerTest {
             clearOnClose: true
         };
 
+        // Fake environment
+        let environment = <IPhpmdEnvironmentModel> {
+            homeDir: "/home/JohnDoe",
+            workspaceFolders: <WorkspaceFolder[]> [
+                {
+                    name: "www",
+                    uri: "file://var/www"
+                }
+            ]
+        };
+
         // Fake document
         let document = <TextDocumentIdentifier> {
             uri: "test"
@@ -265,7 +321,7 @@ class PhpmdControllerTest {
         });
 
         // Create and configure controller
-        let controller = new PhpmdController(connection, settings);
+        let controller = new PhpmdController(connection, settings, environment);
         controller.setLogger(new NullLogger());
 
         // Act
@@ -287,6 +343,17 @@ class PhpmdControllerTest {
             clearOnClose: false
         };
 
+        // Fake environment
+        let environment = <IPhpmdEnvironmentModel> {
+            homeDir: "/home/JohnDoe",
+            workspaceFolders: <WorkspaceFolder[]> [
+                {
+                    name: "www",
+                    uri: "file://var/www"
+                }
+            ]
+        };
+
         // Fake document
         let document = <TextDocumentIdentifier> {
             uri: "test"
@@ -297,7 +364,7 @@ class PhpmdControllerTest {
         connection.sendDiagnostics = sinon.spy();
 
         // Create and configure controller
-        let controller = new PhpmdController(connection, settings);
+        let controller = new PhpmdController(connection, settings, environment);
         controller.setLogger(new NullLogger());
 
         // Act

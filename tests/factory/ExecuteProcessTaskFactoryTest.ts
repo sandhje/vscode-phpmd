@@ -4,6 +4,8 @@ import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
 import * as sinon from "sinon";
 import ExecuteProcessTaskFactory from "../../server/factory/ExecuteProcessTaskFactory";
 import IPhpmdSettingsModel from "../../server/model/IPhpmdSettingsModel";
+import IPhpmdEnvironmentModel from "../../server/model/IPhpmdEnvironmentModel";
+import { WorkspaceFolder } from "vscode-languageserver";
 
 @suite("ExecuteProcessTask factory")
 class ExecuteProcessTaskFactoryTest {
@@ -19,8 +21,19 @@ class ExecuteProcessTaskFactoryTest {
             verbose: true
         };
 
+        // Fake environment
+        let environment = <IPhpmdEnvironmentModel> {
+            homeDir: "/home/JohnDoe",
+            workspaceFolders: <WorkspaceFolder[]> [
+                {
+                    name: "www",
+                    uri: "file://var/www"
+                }
+            ]
+        };
+
         // Create and configure factory instance
-        let factory = new ExecuteProcessTaskFactory(settings);
+        let factory = new ExecuteProcessTaskFactory(settings, environment);
 
         // Act
         let task = factory.create();
