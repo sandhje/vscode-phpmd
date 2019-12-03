@@ -43,7 +43,7 @@ Or to use your own PHPMD PHAR on a custom location:
 
 ### phpmd.rules: 
 
-Customize the PHPMD ruleset files used. This option can also take the path to a custom [PHPMD ruleset file](https://phpmd.org/documentation/creating-a-ruleset.html). Use VS Code's workspace settings to control the rules or ruleset files per workspace. Refer to [PHPMD's documentation](https://phpmd.org/documentation/index.html) for more information on the ruleset parameter.
+Customize the PHPMD ruleset files used. This option can also take the path to a custom [PHPMD ruleset file](https://phpmd.org/documentation/creating-a-ruleset.html). Use VS Code's workspace settings to control the rules or ruleset files per workspace. When setting a path to a ruleset file, and the path starts with "~/" this will be replaced with the OS homedir. The string "${workspaceFolder}" in a path to a ruleset file will be replaced with an absolute path to the folder in the workspace which relates to the file that is being validated. Refer to [PHPMD's documentation](https://phpmd.org/documentation/index.html) for more information on the ruleset parameter.
 
 #### Examples:
 To use only the cleancode ruleset and skip all the others: 
@@ -59,6 +59,16 @@ Pass a comma seperated list of rulesets:
 Pass the path to a ruleset file: 
 ```
 "phpmd.rules": "C:/path/to/phpmd_config.xml"
+```
+
+Pass the path to a ruleset file located in the home directory: 
+```
+"phpmd.rules": "~/phpmd_config.xml"
+```
+
+Pass the path to a ruleset file located in the workspace folder: 
+```
+"phpmd.rules": "${workspaceFolder}/phpmd_config.xml"
 ```
 
 ### phpmd.verbose: 
@@ -95,3 +105,5 @@ See client/CHANGELOG.md
 
 * The people behind [PHPMD](https://phpmd.org/people-behind.html)
 * The Microsoft VSCode team for [VSCode](https://code.visualstudio.com/) and [vscode-languageserver-node](https://github.com/Microsoft/vscode-languageserver-node).
+* Quentin Dreyer for his OS homedir replacement solution (https://github.com/qkdreyer)
+* Shane Smith for his spelling fixes (https://github.com/shane-smith)
