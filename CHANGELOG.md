@@ -1,3 +1,10 @@
+# Version 1.2.0
+
+* Added variable replacement in phpmd command (workspaceFolder and os homedir)
+* Small spelling fixes
+* Updated package dependencies
+* Added trimming of diagnostic messages (issue 48)
+
 # Version 1.1.0
 
 * Added clearing of diagnostics on file close (issue #36)
