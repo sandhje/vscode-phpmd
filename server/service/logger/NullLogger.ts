@@ -1,4 +1,5 @@
 import ILogger from "./ILogger";
+import { IConnection, ClientCapabilities, ServerCapabilities } from "vscode-languageserver";
 
 /**
  * Null object implementation of ILogger
@@ -7,6 +8,16 @@ import ILogger from "./ILogger";
  * @author Sandhjé Bouw (sandhje@ecodes.io)
  */
 class NullLogger implements ILogger {
+    attach(connection: IConnection): void {
+        throw new Error("Method not implemented.");
+    }
+    connection: IConnection;
+    initialize(capabilities: ClientCapabilities): void {
+        throw new Error("Method not implemented.");
+    }
+    fillServerCapabilities(capabilities: ServerCapabilities): void {
+        throw new Error("Method not implemented.");
+    }
     /**
      * Verbose flag
      *

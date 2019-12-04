@@ -6,6 +6,8 @@ import PipelineErrorModel from "../../../server/model/PipelineErrorModel";
 import PipelinePayloadModel from "../../../server/model/PipelinePayloadModel";
 import PhpmdService from "../../../server/service/PhpmdService";
 import ExecuteProcessStrategy from "../../../server/service/pipeline/ExecuteProcessStrategy";
+import { URI } from "vscode-uri";
+import PhpmdCommandBuilder from "../../../server/service/PhpmdCommandBuilder";
 
 @suite("ExectuteProcess strategy")
 class ExecuteProcessStrategyTest {
@@ -18,7 +20,7 @@ class ExecuteProcessStrategyTest {
         let resolve = (output: PipelinePayloadModel) => {
             // Assert
             // ======
-            expect(runStub.calledWithExactly("\"testUri\" xml \"testRules\"")).to.be.true;
+            expect(runStub.calledWithExactly(`"${URI.parse("testUri").fsPath}" xml "testRules"`)).to.be.true;
             expect(runStub.calledOnce).to.be.true;
             expect(output.raw).to.equal("Test data");
             done();
@@ -31,6 +33,9 @@ class ExecuteProcessStrategyTest {
 
         // Fake executable
         let executable = "testExecutable";
+
+        // Fake commandBuilder
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
 
         // Fake rules
         let rules = "testRules";
@@ -47,7 +52,7 @@ class ExecuteProcessStrategyTest {
         service.run = runStub;
 
         // Initialise strategy and configure
-        let strategy = new ExecuteProcessStrategy(executable, rules);
+        let strategy = new ExecuteProcessStrategy(commandBuilderFake, rules);
         strategy.setService(service);
 
         // Act
@@ -67,7 +72,7 @@ class ExecuteProcessStrategyTest {
         let reject = (reason: PipelineErrorModel) => {
             // Assert
             // ======
-            expect(runStub.calledWithExactly("\"testUri\" xml \"testRules\"")).to.be.true;
+            expect(runStub.calledWithExactly(`"${URI.parse("testUri").fsPath}" xml "testRules"`)).to.be.true;
             expect(reason.error.message).to.equal("Test error");
             expect(reason.silent).to.be.false;
             done();
@@ -75,6 +80,9 @@ class ExecuteProcessStrategyTest {
 
         // Fake executable
         let executable = "testExecutable";
+
+        // Fake commandBuilder
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
 
         // Fake rules
         let rules = "testRules";
@@ -91,7 +99,7 @@ class ExecuteProcessStrategyTest {
         service.run = runStub;
 
         // Initialise strategy and configure
-        let strategy = new ExecuteProcessStrategy(executable, rules);
+        let strategy = new ExecuteProcessStrategy(commandBuilderFake, rules);
         strategy.setService(service);
 
         // Act
@@ -118,6 +126,9 @@ class ExecuteProcessStrategyTest {
         // Fake executable
         let executable = "testExecutable";
 
+        // Fake commandBuilder
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+
         // Fake rules
         let rules = "testRules";
 
@@ -133,7 +144,7 @@ class ExecuteProcessStrategyTest {
         service.run = runStub;
 
         // Initialise strategy and configure
-        let strategy = new ExecuteProcessStrategy(executable, rules);
+        let strategy = new ExecuteProcessStrategy(commandBuilderFake, rules);
         strategy.setService(service);
 
         // Act

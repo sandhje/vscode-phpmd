@@ -1,5 +1,5 @@
 import { Diagnostic } from "vscode-languageserver";
-import Uri from "vscode-uri";
+import { URI } from "vscode-uri";
 import { IPmd } from "./pmd";
 
 /**
@@ -23,7 +23,7 @@ class PipelinePayloadModel {
      * @property {string}
      */
     public get path(): string {
-        return Uri.parse(this.uri).fsPath;
+        return URI.parse(this.uri).fsPath;
     }
 
     /**

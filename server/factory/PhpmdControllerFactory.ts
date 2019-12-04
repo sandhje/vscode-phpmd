@@ -1,6 +1,7 @@
 import { IConnection } from "vscode-languageserver";
 import PhpmdController from "../controller/PhpmdController";
 import IPhpmdSettingsModel from "../model/IPhpmdSettingsModel";
+import IPhpmdEnvironmentModel from "../model/IPhpmdEnvironmentModel";
 import IFactory from "./IFactory";
 
 /**
@@ -21,6 +22,11 @@ class PhpmdControllerFactory implements IFactory<PhpmdController> {
     private settings: IPhpmdSettingsModel;
 
     /**
+     * @property {IPhpmdEnvironmentModel} environment
+     */
+    private environment: IPhpmdEnvironmentModel;
+
+    /**
      * Create PHP mess detector controller instance
      *
      * @see IFaction::create
@@ -35,7 +41,7 @@ class PhpmdControllerFactory implements IFactory<PhpmdController> {
             throw Error("Unable to create PhpmdController, no settings set");
         }
 
-        return new PhpmdController(this.connection, this.settings);
+        return new PhpmdController(this.connection, this.settings, this.environment);
     }
 
     /**
@@ -55,6 +61,15 @@ class PhpmdControllerFactory implements IFactory<PhpmdController> {
      */
     public setSettings(settings: IPhpmdSettingsModel) {
         this.settings = settings;
+    }
+
+    /**
+     * Set vscode-phpmd environment
+     *
+     * @param {IPhpmdEnvironmentModel} environment
+     */
+    public setEnvironment(environment: IPhpmdEnvironmentModel) {
+        this.environment = environment;
     }
 }
 

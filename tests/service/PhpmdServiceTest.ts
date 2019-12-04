@@ -4,6 +4,7 @@ import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
 import * as sinon from "sinon";
 import * as stream from "stream";
 import PhpmdService from "../../server/service/PhpmdService";
+import PhpmdCommandBuilder from "../../server/service/PhpmdCommandBuilder";
 
 @suite("PhpMD service")
 class ServerTest {
@@ -13,7 +14,10 @@ class ServerTest {
         // Arrange
         // =======
         // Fake executable
-        let executable = "testExecutable";
+        let executable = "testExecutable"
+
+        // Fake commandBuilder
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
 
         // Fake options
         let options = "testOptions";
@@ -37,7 +41,7 @@ class ServerTest {
         executor.returns(process);
 
         // Act
-        let service = new PhpmdService(executable);
+        let service = new PhpmdService(commandBuilderFake);
         service.setExecutor(executor);
         service.run(options).then((result) => {
             // Assert
@@ -54,6 +58,9 @@ class ServerTest {
         // =======
         // Fake executable
         let executable = "testExecutable";
+
+        // Fake commandBuilder
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
 
         // Fake options
         let options = "testOptions";
@@ -77,7 +84,7 @@ class ServerTest {
         executor.returns(process);
 
         // Act
-        let service = new PhpmdService(executable);
+        let service = new PhpmdService(commandBuilderFake);
         service.setExecutor(executor);
         service.run(options).then(null, (err: Error) => {
             // Assert
@@ -92,6 +99,9 @@ class ServerTest {
         // =======
         // Fake executable
         let executable = "testExecutable";
+
+        // Fake commandBuilder
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
 
         // Fake options
         let options = "testOptions";
@@ -114,7 +124,7 @@ class ServerTest {
         executor.returns(process);
 
         // Act
-        let service = new PhpmdService(executable);
+        let service = new PhpmdService(commandBuilderFake);
         service.setExecutor(executor);
         service.run(options).then(null, (err: Error) => {
             // Assert
@@ -129,6 +139,9 @@ class ServerTest {
         // =======
         // Fake executable
         let executable = "testExecutable";
+
+        // Fake commandBuilder
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
 
         // Set encoding spy
         let setEncodingSpy = sinon.spy();
@@ -149,7 +162,7 @@ class ServerTest {
         executor.returns(process);
 
         // Act
-        let service = new PhpmdService(executable);
+        let service = new PhpmdService(commandBuilderFake);
         service.setExecutor(executor);
         service.testPhpmd().then((result) => {
             // Assert
@@ -167,6 +180,9 @@ class ServerTest {
         // Fake executable
         let executable = "php testExecutable";
 
+        // Fake commandBuilder
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+
         // Set encoding spy
         let setEncodingSpy = sinon.spy();
 
@@ -186,7 +202,7 @@ class ServerTest {
         executor.returns(process);
 
         // Act
-        let service = new PhpmdService(executable);
+        let service = new PhpmdService(commandBuilderFake);
         service.setExecutor(executor);
         service.testPhpmd().then((result) => {
             // Assert

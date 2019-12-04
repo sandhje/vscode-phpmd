@@ -5,6 +5,7 @@ import PipelinePayloadModel from "../../model/PipelinePayloadModel";
 import ILogger from "../logger/ILogger";
 import NullLogger from "../logger/NullLogger";
 import PhpmdService from "../PhpmdService";
+import PhpmdCommandBuilder from "../PhpmdCommandBuilder";
 
 /**
  * Execute PHP mess detector pipeline task strategy
@@ -26,12 +27,12 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
     /**
      * Execute process task strategy constructor
      *
-     * @param {string} command Command used to instantiate the PHP mess detector service
+     * @param {PhpmdCommandBuilder} commandBuilder CommandBuilder used to instantiate the PHP mess detector service
      * @param {string} rules PHP mess detector rules to be passed as option to the command
      * @param {ILogger} logger Logger, defaults to Null object implementation
      */
     public constructor(
-        private command: string,
+        private commandBuilder: PhpmdCommandBuilder,
         private rules: string,
         private logger: ILogger = new NullLogger()
     ) { }
@@ -77,7 +78,7 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
      */
     protected getService() {
         if (!this.service) {
-            this.service = new PhpmdService(this.command);
+            this.service = new PhpmdService(this.commandBuilder);
             this.service.setLogger(this.logger);
         }
 
@@ -101,7 +102,7 @@ class ExecuteProcessStrategy implements IExecuteStrategy<PipelinePayloadModel> {
      * @returns {Promise<string>}
      */
     protected executeProcess(path: string): Promise<string> {
-        return this.getService().run("\"" + path + "\"" + " xml \"" + this.rules + "\"");
+        return this.getService().run(`"${path}" xml "${this.rules}"`);
     }
 }
 

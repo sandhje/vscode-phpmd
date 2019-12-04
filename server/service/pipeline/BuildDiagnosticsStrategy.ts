@@ -265,6 +265,8 @@ class BuildDiagnosticsStrategy implements IExecuteStrategy<PipelinePayloadModel>
     protected getMessage(problem: IPmdViolation): string {
         let message = problem._ || null;
 
+        message = message.replace(/^\s+|\s+$/g, '');
+
         if (message === null) {
             throw new Error("Unable to find problem message");
         }

@@ -5,6 +5,7 @@ import * as sinon from "sinon";
 import { IConnection } from "vscode-languageserver";
 import PipelineFactory from "../../server/factory/PipelineFactory";
 import IPhpmdSettingsModel from "../../server/model/IPhpmdSettingsModel";
+import IPhpmdEnvironmentModel from "../../server/model/IPhpmdEnvironmentModel";
 
 @suite("Pipeline factory")
 class PipelineFactoryTest {
@@ -16,8 +17,11 @@ class PipelineFactoryTest {
         // Fake settings
         let settings = <IPhpmdSettingsModel> {};
 
+        // Fake environment
+        let environment = <IPhpmdEnvironmentModel> {};
+
         // Create and configure factory instance
-        let factory = new PipelineFactory(settings);
+        let factory = new PipelineFactory(settings, environment);
 
         // Act
         let pipeline = factory.create();

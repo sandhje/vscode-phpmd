@@ -1,6 +1,7 @@
 import * as Process from "child_process";
 import ILogger from "./logger/ILogger";
 import NullLogger from "./logger/NullLogger";
+import PhpmdCommandBuilder from "./PhpmdCommandBuilder";
 
 /**
  * PHP mess detector service
@@ -30,9 +31,9 @@ class PhpmdService {
      *
      * Takes the PHP mess detector command to be worked with
      *
-     * @param {string} command
+     * @param {PhpmdCommandBuilder} commandBuilder
      */
-    constructor(private command: string) { }
+    constructor(private commandBuilder: PhpmdCommandBuilder) { }
 
     /**
      * PHP availability test
@@ -44,8 +45,8 @@ class PhpmdService {
      * @returns {Promise<booean>}
      */
     public testPhp(): Promise<boolean> {
-        if (this.command.toLowerCase().substr(0, 4) !== "php ") {
-            this.getLogger().info("PHP mess detector command not using global PHP, skipping PHP test", true);
+        if (!this.commandBuilder.usingGlobalPhp()) {
+            this.getLogger().info("PHP Mess Detector command not using global PHP, skipping PHP test", true);
             return Promise.resolve(true);
         }
 
@@ -70,9 +71,9 @@ class PhpmdService {
     public testPhpmd(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.testPhp().then(() => {
-                return this.execute(this.command + " --version");
+                return this.execute(this.commandBuilder.buildPhpmdVersionCommand());
             }).then((data) => {
-                this.getLogger().info("PHP Mess Detector test succesful (" + data.trim() + ")", true);
+                this.getLogger().info("PHP Mess Detector test successful (" + data.trim() + ")", true);
                 resolve(true);
             }, (err: Error) => {
                 reject(err);
@@ -90,8 +91,8 @@ class PhpmdService {
      * @returns {Promise<string>}
      */
     public run(options: string): Promise<string> {
-        this.getLogger().info("Running phpmd command (" + this.command + " " + options + ")", true);
-        return this.execute(this.command + " " + options);
+        this.getLogger().info(`Running phpmd command with options "${options}"`, true);
+        return this.execute(this.commandBuilder.buildPhpmdCommand(options));
     }
 
     /**
