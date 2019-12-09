@@ -80,6 +80,11 @@ To enable verbose logging:
 "phpmd.verbose": true
 ```
 
+## System requirements
+* PHP_Depend >= 2.0.0
+* PHP >= 5.3.9
+* [PHP XML extension](https://www.php.net/manual/en/simplexml.installation.php)
+
 ## Troubleshooting
 * Turn on verbose logging through settings and check output
 * Ask a question on [gitter](https://gitter.im/sandhje/vscode-phpmd)
