@@ -44,6 +44,7 @@
         },
         "phpmd.command": {
           "type": "string",
+          "scope": "machine",
           "default": "",
           "description": "The phpmd command. Leave empty to use the shipped phpmd phar (local php executable is required)"
         },

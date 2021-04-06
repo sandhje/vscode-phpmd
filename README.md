@@ -40,6 +40,7 @@ Or to use your own PHPMD PHAR on a custom location:
 ```
 "phpmd.command": "php C:/path/to/phpmd.phar"`
 ```
+***Security fix in version 1.3.0:*** *Before version 1.3.0 it was possible to set `phpmd.command` through workspace settings. This unfortunately opened possibilities for a remote code execution attack. Although I recognize that some users used this workspace setting in their day to day work I feel it is more important that anyone can use this extension without worrying about their system's security. As such, since version 1.3.0, this setting is disabled at workspace level to address this issue.* 
 
 ### phpmd.rules: 
 
@@ -112,3 +113,4 @@ See client/CHANGELOG.md
 * The Microsoft VSCode team for [VSCode](https://code.visualstudio.com/) and [vscode-languageserver-node](https://github.com/Microsoft/vscode-languageserver-node).
 * Quentin Dreyer for his OS homedir replacement solution (https://github.com/qkdreyer)
 * Shane Smith for his spelling fixes (https://github.com/shane-smith)
+* Ryotek for reporting the phpmd.command security issue (https://twitter.com/ryotkak)
