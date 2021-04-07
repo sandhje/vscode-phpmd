@@ -3,6 +3,8 @@ import * as Xml2Js from "xml2js";
 import IPhpmdSettingsModel from "../model/IPhpmdSettingsModel";
 import PipelinePayloadModel from "../model/PipelinePayloadModel";
 import ParseStrategy from "../service/pipeline/ParseStrategy";
+import ILogger from "../service/logger/ILogger";
+import NullLogger from "../service/logger/NullLogger";
 import IFactory from "./IFactory";
 
 /**
@@ -14,9 +16,11 @@ import IFactory from "./IFactory";
 class ExecuteProcessTaskFactory implements IFactory<Task<PipelinePayloadModel>> {
     /**
      * @param {IPhpmdSettingsModels} settings
+     * @param {ILogger} logger
      */
     constructor(
-        private settings: IPhpmdSettingsModel
+        private settings: IPhpmdSettingsModel,
+        private logger: ILogger = new NullLogger()
     ) { }
 
     /**
@@ -26,7 +30,7 @@ class ExecuteProcessTaskFactory implements IFactory<Task<PipelinePayloadModel>> 
      * @returns {Task<PipelinePayloadModel>}
      */
     public create(): Task<PipelinePayloadModel> {
-        let strategy = new ParseStrategy(this.getParser());
+        let strategy = new ParseStrategy(this.getParser(), this.logger);
 
         return new Task<PipelinePayloadModel>(strategy);
     }
