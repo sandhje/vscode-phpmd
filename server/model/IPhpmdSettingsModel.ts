@@ -20,6 +20,20 @@ interface IPhpmdSettingsModel {
     command: string;
 
     /**
+     * PHP mess detector unsafe command enabled
+     *
+     * @property {boolean}
+     */
+     unsafeCommandEnabled: boolean;
+
+    /**
+     * PHP mess detector unsafe command
+     *
+     * @property {string}
+     */
+    unsafeCommand: string;
+
+    /**
      * PHP mess detector rules
      *
      * @property {string}

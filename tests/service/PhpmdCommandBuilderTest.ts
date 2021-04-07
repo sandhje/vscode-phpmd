@@ -12,11 +12,13 @@ class PhpmdCommandBuilderTest {
     public assertUsingGlobalPhp() {
         // Arrange
         const command = "php /path/to/phpmd.phar";
+        const unsafeCommand = "";
+        const unsafeCommandEnabled = false;
         const workspaceFolders = [];
         const homeDir = "";
 
         // Act
-        const commandBuilder = new PhpmdCommandBuilder(command, workspaceFolders, homeDir);
+        const commandBuilder = new PhpmdCommandBuilder(command, unsafeCommandEnabled, unsafeCommand, workspaceFolders, homeDir);
 
         // Assert
         expect(commandBuilder.usingGlobalPhp()).to.be.true;
@@ -26,11 +28,13 @@ class PhpmdCommandBuilderTest {
     public assertNotUsingGlobalPhp() {
         // Arrange
         const command = "/path/to/php /path/to/phpmd.phar";
+        const unsafeCommand = "";
+        const unsafeCommandEnabled = false;
         const workspaceFolders = [];
         const homeDir = "";
 
         // Act
-        const commandBuilder = new PhpmdCommandBuilder(command, workspaceFolders, homeDir);
+        const commandBuilder = new PhpmdCommandBuilder(command, unsafeCommandEnabled, unsafeCommand, workspaceFolders, homeDir);
 
         // Assert
         expect(commandBuilder.usingGlobalPhp()).to.be.false;
@@ -40,11 +44,13 @@ class PhpmdCommandBuilderTest {
     public assertBuildVersionCommand() {
         // Arrange
         const command = "php /path/to/phpmd.phar";
+        const unsafeCommand = "";
+        const unsafeCommandEnabled = false;
         const workspaceFolders = [];
         const homeDir = "";
 
         // Act
-        const commandBuilder = new PhpmdCommandBuilder(command, workspaceFolders, homeDir);
+        const commandBuilder = new PhpmdCommandBuilder(command, unsafeCommandEnabled, unsafeCommand, workspaceFolders, homeDir);
 
         // Assert
         expect(commandBuilder.buildPhpmdVersionCommand()).to.equal("php /path/to/phpmd.phar --version");
@@ -54,12 +60,14 @@ class PhpmdCommandBuilderTest {
     public assertBuildPhpMDCommand() {
         // Arrange
         const command = "php /path/to/phpmd.phar";
+        const unsafeCommand = "";
+        const unsafeCommandEnabled = false;
         const workspaceFolders = [];
         const homeDir = "";
         const options = `"/path/to/file.php" xml "cleancode,codesize,controversial,design,unusedcode,naming"`;
 
         // Act
-        const commandBuilder = new PhpmdCommandBuilder(command, workspaceFolders, homeDir);
+        const commandBuilder = new PhpmdCommandBuilder(command, unsafeCommandEnabled, unsafeCommand, workspaceFolders, homeDir);
 
         // Assert
         expect(commandBuilder.buildPhpmdCommand(options))
@@ -70,12 +78,14 @@ class PhpmdCommandBuilderTest {
     public assertUnixHomeBuildPhpMDCommand() {
         // Arrange
         const command = "php /path/to/phpmd.phar";
+        const unsafeCommand = "";
+        const unsafeCommandEnabled = false;
         const workspaceFolders = [];
         const homeDir = "/home";
         const options = `"/path/to/file.php" xml "~/phpmd.xml"`;
 
         // Act
-        const commandBuilder = new PhpmdCommandBuilder(command, workspaceFolders, homeDir);
+        const commandBuilder = new PhpmdCommandBuilder(command, unsafeCommandEnabled, unsafeCommand, workspaceFolders, homeDir);
 
         // Assert
         expect(commandBuilder.buildPhpmdCommand(options))
@@ -86,12 +96,14 @@ class PhpmdCommandBuilderTest {
     public assertWindowsHomeBuildPhpMDCommand() {
         // Arrange
         const command = "php /path/to/phpmd.phar";
+        const unsafeCommand = "";
+        const unsafeCommandEnabled = false;
         const workspaceFolders = [];
         const homeDir = "C:\\Users\\Test";
         const options = `"/path/to/file.php" xml "~\\phpmd.xml"`;
 
         // Act
-        const commandBuilder = new PhpmdCommandBuilder(command, workspaceFolders, homeDir);
+        const commandBuilder = new PhpmdCommandBuilder(command, unsafeCommandEnabled, unsafeCommand, workspaceFolders, homeDir);
 
         // Assert
         expect(commandBuilder.buildPhpmdCommand(options))
@@ -102,6 +114,8 @@ class PhpmdCommandBuilderTest {
     public assertWorkspaceFolderBuildPhpMDCommand() {
         // Arrange
         const command = "php /path/to/phpmd.phar";
+        const unsafeCommand = "";
+        const unsafeCommandEnabled = false;
         const workspaceFolders: WorkspaceFolder[] = [
             { name: "nomatch", uri: "file:///no/match/to/test" },
             { name: "test", uri: "file:///path/to/test" },
@@ -110,7 +124,7 @@ class PhpmdCommandBuilderTest {
         const options = `"${URI.parse("/path/to/test/file.php").fsPath}" xml "$\{workspaceFolder\}/phpmd.xml"`;
         
         // Act
-        const commandBuilder = new PhpmdCommandBuilder(command, workspaceFolders, homeDir);
+        const commandBuilder = new PhpmdCommandBuilder(command, unsafeCommandEnabled, unsafeCommand, workspaceFolders, homeDir);
         
         // Assert
         expect(commandBuilder.buildPhpmdCommand(options))
@@ -121,6 +135,8 @@ class PhpmdCommandBuilderTest {
     public assertDefaultWorkspaceFolderBuildPhpMDCommand() {
         // Arrange
         const command = "php /path/to/phpmd.phar";
+        const unsafeCommand = "";
+        const unsafeCommandEnabled = false;
         const workspaceFolders: WorkspaceFolder[] = [
             { name: "nomatch", uri: "file:///no/match/to/test" },
             { name: "test", uri: "file:///path/to/test" },
@@ -129,10 +145,58 @@ class PhpmdCommandBuilderTest {
         const options = `"${URI.parse("/not/path/to/test/file.php").fsPath}" xml "$\{workspaceFolder\}/phpmd.xml"`;
         
         // Act
-        const commandBuilder = new PhpmdCommandBuilder(command, workspaceFolders, homeDir);
+        const commandBuilder = new PhpmdCommandBuilder(command, unsafeCommandEnabled, unsafeCommand, workspaceFolders, homeDir);
         
         // Assert
         expect(commandBuilder.buildPhpmdCommand(options))
             .to.equal(`php /path/to/phpmd.phar "${URI.parse("/not/path/to/test/file.php").fsPath}" xml "${URI.parse("file:///no/match/to/test").fsPath}/phpmd.xml"`);
+    }
+
+    @test("Should use unsafe command if enabled and not empty")
+    public assertUsingUnsafeCommand() {
+        // Arrange
+        const command = "php /path/to/phpmd.phar";
+        const unsafeCommand = "php /path/to/unsafe/phpmd.phar";
+        const unsafeCommandEnabled = true;
+        const workspaceFolders = [];
+        const homeDir = "";
+
+        // Act
+        const commandBuilder = new PhpmdCommandBuilder(command, unsafeCommandEnabled, unsafeCommand, workspaceFolders, homeDir);
+
+        // Assert
+        expect(commandBuilder.buildPhpmdVersionCommand()).to.equal(`${unsafeCommand} --version`);
+    }
+
+    @test("Should not use unsafe command if not enabled and not empty")
+    public assertNotUsingDisabledUnsafeCommand() {
+        // Arrange
+        const command = "php /path/to/phpmd.phar";
+        const unsafeCommand = "php /path/to/unsafe/phpmd.phar";
+        const unsafeCommandEnabled = false;
+        const workspaceFolders = [];
+        const homeDir = "";
+
+        // Act
+        const commandBuilder = new PhpmdCommandBuilder(command, unsafeCommandEnabled, unsafeCommand, workspaceFolders, homeDir);
+
+        // Assert
+        expect(commandBuilder.buildPhpmdVersionCommand()).to.equal(`${command} --version`);
+    }
+
+    @test("Should not use unsafe command if enabled and empty")
+    public assertNotUsingEmptyUnsafeCommand() {
+        // Arrange
+        const command = "php /path/to/phpmd.phar";
+        const unsafeCommand = "";
+        const unsafeCommandEnabled = true;
+        const workspaceFolders = [];
+        const homeDir = "";
+
+        // Act
+        const commandBuilder = new PhpmdCommandBuilder(command, unsafeCommandEnabled, unsafeCommand, workspaceFolders, homeDir);
+
+        // Assert
+        expect(commandBuilder.buildPhpmdVersionCommand()).to.equal(`${command} --version`);
     }
 }

@@ -40,7 +40,17 @@ Or to use your own PHPMD PHAR on a custom location:
 ```
 "phpmd.command": "php C:/path/to/phpmd.phar"`
 ```
-***Security fix in version 1.3.0:*** *Before version 1.3.0 it was possible to set `phpmd.command` through workspace settings. This unfortunately opened possibilities for a remote code execution attack. Although I recognize that some users used this workspace setting in their day to day work I feel it is more important that anyone can use this extension without worrying about their system's security. As such, since version 1.3.0, this setting is disabled at workspace level to address this issue.* 
+***Security fix in version 1.3.0:*** *Before version 1.3.0 it was possible to set `phpmd.command` through workspace settings. This unfortunately opened possibilities for a remote code execution attack. As such, since version 1.3.0, this setting is disabled at workspace level to address this issue. I do understand though that some users used this workspace setting in their day to day work therefore it is still possible to override the phpmd.command setting through workspace settings via the phpmd.unsafeCommand setting. This setting is disabled by default, use at your own risk, see the explanation at the phpmd.unsafeCommandEnabled setting.* 
+
+### phpmd.unsafeCommand: 
+Customize the PHP mess detector command from workspace settings. This setting is ignored by default if `phpmd.unsafeCommandEnabled` is not set to `true`. 
+
+*Warning:* Please be aware that using this setting opens a possibility for a remote code execution attack. See the explanation at the `phpmd.unsafeCommandEnabled` setting. 
+
+### phpmd.unsafeCommandEnabled: 
+Enable customizing the PHP mess detector command from workspace settings. Default is `false`. This setting can't be set in workspace settings.
+
+*Warning:* Please be aware that enabling this setting opens a possibility for a remote code execution attack. When opening a folder from an untrusted source, the opened folder could have a .vscode folder with a settings.json file defining the `phpmd.unsafeCommand` setting. The command configured there will be executed as soon as a php file is opened in the workspace. The author of the untrusted code could execute any command on your system through this setting, resulting in your system possibly being compromised. Use at your own risk.
 
 ### phpmd.rules: 
 

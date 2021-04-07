@@ -48,6 +48,18 @@
           "default": "",
           "description": "The phpmd command. Leave empty to use the shipped phpmd phar (local php executable is required)"
         },
+        "phpmd.unsafeCommandEnabled": {
+          "type": "boolean",
+          "scope": "machine",
+          "default": false,
+          "description": "Enable overriding phpmd command from workspace. This potentially makes you vulnerable to a remote code execution attack, only enable this if you know what you're doing."
+        },
+        "phpmd.unsafeCommand": {
+          "type": "string",
+          "scope": "machine-overridable",
+          "default": "",
+          "description": "Override phpmd command from workspace. This potentially makes you vulnerable to a remote code execution attack, only use this if you know what you're doing."
+        },
         "phpmd.rules": {
           "type": "string",
           "default": "cleancode,codesize,controversial,design,unusedcode,naming",

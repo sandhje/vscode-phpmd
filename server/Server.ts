@@ -441,6 +441,8 @@ class Server {
         let defaults: IPhpmdSettingsModel = {
             enabled: true,
             command: "",
+            unsafeCommandEnabled: false,
+            unsafeCommand: "",
             rules: "",
             verbose: false,
             clearOnClose: true

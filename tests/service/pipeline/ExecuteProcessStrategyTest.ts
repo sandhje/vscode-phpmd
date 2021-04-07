@@ -35,7 +35,7 @@ class ExecuteProcessStrategyTest {
         let executable = "testExecutable";
 
         // Fake commandBuilder
-        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, false, "", [], "");
 
         // Fake rules
         let rules = "testRules";
@@ -82,7 +82,7 @@ class ExecuteProcessStrategyTest {
         let executable = "testExecutable";
 
         // Fake commandBuilder
-        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, false, "", [], "");
 
         // Fake rules
         let rules = "testRules";
@@ -127,7 +127,7 @@ class ExecuteProcessStrategyTest {
         let executable = "testExecutable";
 
         // Fake commandBuilder
-        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, false, "", [], "");
 
         // Fake rules
         let rules = "testRules";
