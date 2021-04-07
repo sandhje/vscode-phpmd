@@ -1,5 +1,5 @@
 import { assert, expect } from "chai";
-import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
+import { only, skip, slow, suite, test, timeout } from "@testdeck/mocha";
 import * as sinon from "sinon";
 import { IConnection, MessageType, ShowMessageNotification } from "vscode-languageserver";
 import ClientConnectionNotifier from "../../../server/service/notifier/ClientConnectionNotifier";

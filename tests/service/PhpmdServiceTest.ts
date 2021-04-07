@@ -1,6 +1,6 @@
 import { assert, expect } from "chai";
 import * as Process from "child_process";
-import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
+import { only, skip, slow, suite, test, timeout } from "@testdeck/mocha";
 import * as sinon from "sinon";
 import * as stream from "stream";
 import PhpmdService from "../../server/service/PhpmdService";
