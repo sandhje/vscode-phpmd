@@ -1,3 +1,10 @@
+# Version 1.3.0
+
+* Added encoding of xml special chars in test filename (issue 61)
+* Fixed remote code execution vulnerability
+* Updated package dependencies
+* Updated integrated phpmd.phar to version 2.9.1
+
 # Version 1.2.0
 
 * Added variable replacement in phpmd command (workspaceFolder and os homedir)
