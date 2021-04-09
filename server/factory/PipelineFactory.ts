@@ -42,7 +42,7 @@ class PipelineFactory implements IFactory<Pipeline<PipelinePayloadModel>> {
         let pipeline = new Pipeline<PipelinePayloadModel>()
             .pipe(new TestFileTaskFactory(this.settings, this.logger).create())
             .pipe(new ExecuteProcessTaskFactory(this.settings, this.environment, this.logger).create())
-            .pipe(new ParseTaskFactory(this.settings).create())
+            .pipe(new ParseTaskFactory(this.settings, this.logger).create())
             .pipe(new BuildDiagnosticsTaskFactory(this.settings, this.logger).create());
 
         return pipeline;

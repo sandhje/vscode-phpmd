@@ -1,6 +1,6 @@
 import { assert, expect } from "chai";
 import * as Process from "child_process";
-import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
+import { only, skip, slow, suite, test, timeout } from "@testdeck/mocha";
 import * as sinon from "sinon";
 import * as stream from "stream";
 import PhpmdService from "../../server/service/PhpmdService";
@@ -17,7 +17,7 @@ class ServerTest {
         let executable = "testExecutable"
 
         // Fake commandBuilder
-        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, false, "", [], "");
 
         // Fake options
         let options = "testOptions";
@@ -60,7 +60,7 @@ class ServerTest {
         let executable = "testExecutable";
 
         // Fake commandBuilder
-        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, false, "", [], "");
 
         // Fake options
         let options = "testOptions";
@@ -101,7 +101,7 @@ class ServerTest {
         let executable = "testExecutable";
 
         // Fake commandBuilder
-        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, false, "", [], "");
 
         // Fake options
         let options = "testOptions";
@@ -141,7 +141,7 @@ class ServerTest {
         let executable = "testExecutable";
 
         // Fake commandBuilder
-        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, false, "", [], "");
 
         // Set encoding spy
         let setEncodingSpy = sinon.spy();
@@ -181,7 +181,7 @@ class ServerTest {
         let executable = "php testExecutable";
 
         // Fake commandBuilder
-        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, false, "", [], "");
 
         // Set encoding spy
         let setEncodingSpy = sinon.spy();

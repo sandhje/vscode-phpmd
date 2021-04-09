@@ -58,6 +58,8 @@ class ExecuteProcessTaskFactory implements IFactory<Task<PipelinePayloadModel>> 
             // TODO: add workspacefolders and homedir from settings
             this.commandBuilder = new PhpmdCommandBuilder(
                 this.settings.command,
+                this.settings.unsafeCommandEnabled,
+                this.settings.unsafeCommand,
                 this.environment.workspaceFolders,
                 this.environment.homeDir
             );

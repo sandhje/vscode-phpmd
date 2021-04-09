@@ -1,6 +1,6 @@
 import { Pipeline } from "@open-sourcerers/j-stillery";
 import { assert, expect } from "chai";
-import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
+import { only, skip, slow, suite, test, timeout } from "@testdeck/mocha";
 import * as sinon from "sinon";
 import { IConnection } from "vscode-languageserver";
 import PipelineFactory from "../../server/factory/PipelineFactory";

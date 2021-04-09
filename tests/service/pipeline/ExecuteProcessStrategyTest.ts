@@ -1,6 +1,6 @@
 import { assert, expect } from "chai";
 import * as Process from "child_process";
-import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
+import { only, skip, slow, suite, test, timeout } from "@testdeck/mocha";
 import * as sinon from "sinon";
 import PipelineErrorModel from "../../../server/model/PipelineErrorModel";
 import PipelinePayloadModel from "../../../server/model/PipelinePayloadModel";
@@ -35,7 +35,7 @@ class ExecuteProcessStrategyTest {
         let executable = "testExecutable";
 
         // Fake commandBuilder
-        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, false, "", [], "");
 
         // Fake rules
         let rules = "testRules";
@@ -82,7 +82,7 @@ class ExecuteProcessStrategyTest {
         let executable = "testExecutable";
 
         // Fake commandBuilder
-        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, false, "", [], "");
 
         // Fake rules
         let rules = "testRules";
@@ -127,7 +127,7 @@ class ExecuteProcessStrategyTest {
         let executable = "testExecutable";
 
         // Fake commandBuilder
-        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, [], "");
+        let commandBuilderFake: PhpmdCommandBuilder = new PhpmdCommandBuilder(executable, false, "", [], "");
 
         // Fake rules
         let rules = "testRules";

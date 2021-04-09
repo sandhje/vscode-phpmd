@@ -20,6 +20,13 @@ class PhpmdCommandBuilder {
     private logger: ILogger;
 
     /**
+     * Command
+     * 
+     * @property {string}
+     */
+    private readonly command: string;
+
+    /**
      * Service constructor
      *
      * Takes the command string and variable for substitution 
@@ -28,7 +35,14 @@ class PhpmdCommandBuilder {
      * @param {WorkspaceFolder[]} workspaceFolders
      * @param {string} homeDir
      */
-    constructor(private readonly command: string, private workspaceFolders: WorkspaceFolder[], private homeDir: string) { }
+    constructor(command: string, unsafeCommandEnabled: boolean, unsafeCommand: string, private workspaceFolders: WorkspaceFolder[], private homeDir: string) {
+        let cmd = command;
+
+        if (unsafeCommandEnabled && unsafeCommand)
+            cmd = unsafeCommand;
+
+        this.command = cmd;
+    }
 
     public usingGlobalPhp(): boolean {
         return this.command.toLowerCase().substr(0, 4) === "php ";
