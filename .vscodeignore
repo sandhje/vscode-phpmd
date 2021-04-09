@@ -1,0 +1,10 @@
+**/*.ts
+**/tsconfig.json
+.nyc_output/**
+.vscode/**
+coverage/**
+.editorconfig
+.gitignore
+mocha.opts
+tslint.json
+.travis.yml
