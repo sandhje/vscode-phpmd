@@ -123,4 +123,4 @@ See client/CHANGELOG.md
 * The Microsoft VSCode team for [VSCode](https://code.visualstudio.com/) and [vscode-languageserver-node](https://github.com/Microsoft/vscode-languageserver-node).
 * Quentin Dreyer for his OS homedir replacement solution (https://github.com/qkdreyer)
 * Shane Smith for his spelling fixes (https://github.com/shane-smith)
-* Ryotek for reporting the phpmd.command security issue (https://twitter.com/ryotkak)
+* RyotaK for reporting the phpmd.command security issue (https://twitter.com/ryotkak)
